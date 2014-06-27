@@ -1,0 +1,36 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="en">
+	<head>
+		<title></title>
+		<link href="/style/default.css" rel="stylesheet" type="text/css" />
+		<style type= "text/css">
+			html,body { border:0; margin:0; height:100%  }
+			.gw_frame { width:500px; min-height:400px; border: solid 1px #888; margin:50px auto; padding:0.5em; }
+		</style>
+		<!-- <noscript> not technically allowed in head but <script> is so ... ~ 'probably an oversight' -->
+		<noscript>
+			<meta http-equiv="Refresh" content="0;URL=/components/no-script.html" />
+		</noscript>		
+	</head>
+	<body>
+		  <div class="gw_frame">
+		    <h1>Internet Gateway</h1>
+        <form style="text-align:center" method="post" action="gw_session_panel.html">
+          <div>
+            Hi you are trying to access this gateway. If you click the button you agree to the terms of use:
+            <div>
+            <strong>Terms of Use:</strong>
+            <ul>
+              <li>We are not responsible for how you use this service or anything you download from or upload to any host anywhere.</li>
+              <li>You agree not to attempt to break this service intentionally, or in order to deny/interfere with the service of others.</li>
+              <li>You agree not abuse this service in anyway.</li>
+            </ul>
+            <p>Please click the button to begin your free usage session.</p>
+            <p>Please DONT close this window else your access will cease shortly after.</p>
+          </div>
+          <input type="hidden" name="accepted" value="1" />
+          <input type="submit" value="Agree and Begin"/>
+        </form>
+      </div>
+	</body>
+</html>

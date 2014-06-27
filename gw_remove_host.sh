@@ -1,0 +1,1 @@
+script/gw_remove_host.sh

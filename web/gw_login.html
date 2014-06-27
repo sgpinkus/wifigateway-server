@@ -1,0 +1,45 @@
+<?php
+$uname = "uname";
+$pwd = "pwd";
+session_start();
+if( isset($_POST['uname']) && isset($_POST['pwd']) && $_POST['uname'] == $uname && $_POST['pwd'] == $pwd )
+{
+  echo "Location: ".$_POST['return'];
+  $_SESSION['auth'] = 1;
+  header("Location: ".$_POST['return']);
+  exit();
+}
+$invalid = "";
+if( isset($_POST['uname']) || isset($_POST['pwd']) )
+{
+  $invalid = "<p>Invalid username or password.</p>";
+}
+?>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="en">
+	<head>
+		<title></title>
+		<link href="/style/default.css" rel="stylesheet" type="text/css" />
+		<style type= "text/css">
+			html,body { border:0; margin:0; height:100%  }
+			.gw_frame { width:500px; min-height:400px; border: solid 1px #888; margin:50px auto; padding:0.5em; }
+			div { margin:0.5em; }
+			input { float:right; }
+		</style>
+		<!-- <noscript> not technically allowed in head but <script> is so ... ~ 'probably an oversight' -->
+		<noscript>
+			<meta http-equiv="Refresh" content="0;URL=/components/no-script.html" />
+		</noscript>		
+	</head>
+	<body>
+	  <div class="gw_frame">
+	  <h1>Login</h1>
+      <form style="text-align:center" method="post">
+        <div><label for="uname">User Name:</label><input type="text" name="uname" /><br style="clear:both" /></div>
+        <div><label for="pwd">Password:</label><input type="password" name="pwd" /></div>
+        <input type="hidden" name="return" value="<?php echo $_REQUEST['return']; ?>" />
+        <div><input type="submit" name="" /></div>
+      </form>
+    </div>
+	</body>
+</html>
