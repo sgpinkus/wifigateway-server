@@ -8,22 +8,22 @@
   */
 QuotaBeacon::QuotaBeacon(QObject *parent) : QObject(parent)
 {
-    w = new FileWatcher(GW_QUOTA_LOG_FILE,this);
-    r = new QRegExp(QString(GW_QUOTA_PREFIX) + ".*SRC=([^\\s]+)\\s.*");
-    r->setMinimal( true );
-    connect(w,SIGNAL(newLine(QString)),this,SLOT(newLine(QString)));
+  w = new FileWatcher(GW_QUOTA_LOG_FILE,this);
+  r = new QRegExp(QString(GW_QUOTA_PREFIX) + ".*SRC=([^\\s]+)\\s.*");
+  r->setMinimal( true );
+  connect(w,SIGNAL(newLine(QString)),this,SLOT(newLine(QString)));
 }
 
 
 void QuotaBeacon::newLine(QString line)
 {
-     qDebug() << "In function " << __func__;
-     QString ipMatch;
-     r->indexIn(line);
-     ipMatch = r->cap(1);
-     qDebug() << line << ipMatch;
-     if( ipMatch.length() > 0 )
-     {
-         emit quotaEvent(ipMatch);
-     }
+  qDebug() << "In function " << __func__;
+  QString ipMatch;
+  r->indexIn(line);
+  ipMatch = r->cap(1);
+  qDebug() << line << ipMatch;
+  if( ipMatch.length() > 0 )
+  {
+    emit quotaEvent(ipMatch);
+  }
 }

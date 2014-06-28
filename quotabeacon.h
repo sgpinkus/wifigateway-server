@@ -9,19 +9,19 @@
 
 class QuotaBeacon : public QObject
 {
-    Q_OBJECT
+  Q_OBJECT
 public:
-    explicit QuotaBeacon(QObject *parent = 0);
+  explicit QuotaBeacon(QObject *parent = 0);
 
 signals:
-    void quotaEvent(QString IP);
+  void quotaEvent(QString IP);
 
 private slots:
-    void newLine(QString line);
+  void newLine(QString line);
 
 private:
-    FileWatcher * w;
-    QRegExp * r;
+  FileWatcher * w;
+  QRegExp * r;
 
 
 };

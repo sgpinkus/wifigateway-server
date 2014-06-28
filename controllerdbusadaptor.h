@@ -15,25 +15,25 @@
  */
 class ControllerDBusAdaptor : public QDBusAbstractAdaptor
 {
-    Q_OBJECT
-    Q_CLASSINFO("D-Bus Interface", "com.epicmorsel.dbus.gateway" )
+  Q_OBJECT
+  Q_CLASSINFO("D-Bus Interface", "com.epicmorsel.dbus.gateway" )
 
 public:
-    ControllerDBusAdaptor(Controller * parent);
+  ControllerDBusAdaptor(Controller * parent);
 
 public slots:
-    int newSession(QString IP);
-    int setBandwidth(QString IP, qint32 bw);
-    int setQuota(QString IP, qint32 quota);
-    int pauseSession(QString IP);
-    int playSession(QString IP);
-    int endSession(QString IP);
-    int updateSession(QString IP);
-    SessionExport getStats(QString IP);
-    QStringList getIPs();
+  int newSession(QString IP);
+  int setBandwidth(QString IP, qint32 bw);
+  int setQuota(QString IP, qint32 quota);
+  int pauseSession(QString IP);
+  int playSession(QString IP);
+  int endSession(QString IP);
+  int updateSession(QString IP);
+  SessionExport getStats(QString IP);
+  QStringList getIPs();
 
 private:
-    Controller * controller;
+  Controller * controller;
 };
 
 #endif // CONTROLLERDBUSADAPTOR_H

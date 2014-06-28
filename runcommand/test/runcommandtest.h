@@ -2,7 +2,7 @@
 
 class RunCommandTest: public QObject
 {
-    Q_OBJECT
+  Q_OBJECT
 private slots:
   void setup();
   void testRunCommandCommon_data();

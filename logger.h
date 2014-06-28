@@ -16,20 +16,20 @@
  */
 class Logger : public QObject
 {
-    Q_OBJECT
+  Q_OBJECT
 public:
-    void logMessage( QString message, QString file = QString() );
-    void logError( QString message, QString file = QString() );
-    static Logger * getLogger(QObject * parent = 0);
-    static QString getLogDir();
+  void logMessage( QString message, QString file = QString() );
+  void logError( QString message, QString file = QString() );
+  static Logger * getLogger(QObject * parent = 0);
+  static QString getLogDir();
 
 private:
-    QDir * logDir;
-    QFile * messageFile;
-    QFile * errorFile;
-    static Logger * logger;
+  QDir * logDir;
+  QFile * messageFile;
+  QFile * errorFile;
+  static Logger * logger;
 
-    explicit Logger(QObject *parent = 0);
+  explicit Logger(QObject *parent = 0);
 
 signals:
 

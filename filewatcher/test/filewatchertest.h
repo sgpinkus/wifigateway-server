@@ -5,7 +5,7 @@
 
 class FileWatcherTest: public QObject
 {
-    Q_OBJECT
+  Q_OBJECT
 public:
   static const char * TEST_FILE;
 

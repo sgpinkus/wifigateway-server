@@ -8,5 +8,4 @@ TEMPLATE = subdirs
 # Directories
 SUBDIRS += filewatcher \
   runcommand \
-  filewatcher \
   gateway.pro

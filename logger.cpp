@@ -20,18 +20,18 @@ Logger * Logger::logger = 0;
  */
 Logger::Logger(QObject *parent) : QObject(parent)
 {
-    QString logPath = QDir::homePath() + "/tmp/";
-    logDir = new QDir();
-    logDir->mkpath( logPath );
-    logDir->cd( logPath );
-    messageFile = new QFile(this);
-    errorFile = new QFile(this);
+  QString logPath = QDir::homePath() + "/tmp/";
+  logDir = new QDir();
+  logDir->mkpath( logPath );
+  logDir->cd( logPath );
+  messageFile = new QFile(this);
+  errorFile = new QFile(this);
 
-    qDebug() << "Creating log dir:" << logDir->path();
-    if ( ! logDir->exists() )
-    {
-        qDebug() << "Failed creating log dir!";
-    }
+  qDebug() << "Creating log dir:" << logDir->path();
+  if ( ! logDir->exists() )
+  {
+    qDebug() << "Failed creating log dir!";
+  }
 }
 
 
@@ -40,11 +40,11 @@ Logger::Logger(QObject *parent) : QObject(parent)
  */
 Logger * Logger::getLogger(QObject * parent)
 {
-    if( logger == 0 )
-    {
-        logger = new Logger(parent);
-    }
-    return logger;
+  if( logger == 0 )
+  {
+    logger = new Logger(parent);
+  }
+  return logger;
 }
 
 
@@ -63,25 +63,25 @@ QString Logger::getLogDir()
  */
 void Logger::logMessage( QString message, QString file )
 {
-    QString logTime = QDateTime::currentDateTime().toString("hh:mm:ss.zzz");
-    messageFile->setFileName( logDir->path() + "/" + MESSAGE_LOG );
+  QString logTime = QDateTime::currentDateTime().toString("hh:mm:ss.zzz");
+  messageFile->setFileName( logDir->path() + "/" + MESSAGE_LOG );
 
-    if( ! file.isEmpty() )
-    {
-        messageFile->setFileName( logDir->path() + "/" + file );
-    }
+  if( ! file.isEmpty() )
+  {
+    messageFile->setFileName( logDir->path() + "/" + file );
+  }
 
-    if( messageFile->open( QIODevice::Append | QIODevice::ReadWrite | QIODevice::Unbuffered ) )
-    {
-        QTextStream out(messageFile);
-        out << logTime + "," + message + "\n";
-        messageFile->flush();
-    }
-    else
-    {
-        qDebug() << "******** Failed to write" << message << "to file" << messageFile->fileName();
-    }
-    messageFile->close();
+  if( messageFile->open( QIODevice::Append | QIODevice::ReadWrite | QIODevice::Unbuffered ) )
+  {
+    QTextStream out(messageFile);
+    out << logTime + "," + message + "\n";
+    messageFile->flush();
+  }
+  else
+  {
+    qDebug() << "******** Failed to write" << message << "to file" << messageFile->fileName();
+  }
+  messageFile->close();
 }
 
 
@@ -91,23 +91,23 @@ void Logger::logMessage( QString message, QString file )
  */
 void Logger::logError( QString message, QString file )
 {
-    QString logTime = QDateTime::currentDateTime().toString("hh:mm:ss.zzz");
-    errorFile->setFileName( logDir->path() + "/" + ERROR_LOG );
+  QString logTime = QDateTime::currentDateTime().toString("hh:mm:ss.zzz");
+  errorFile->setFileName( logDir->path() + "/" + ERROR_LOG );
 
-    if( ! file.isEmpty() )
-    {
-        errorFile->setFileName( logDir->path() + "/" + file );
-    }
+  if( ! file.isEmpty() )
+  {
+    errorFile->setFileName( logDir->path() + "/" + file );
+  }
 
-    if( errorFile->open( QIODevice::Append | QIODevice::ReadWrite | QIODevice::Unbuffered ) )
-    {
-        QTextStream out(errorFile);
-        out << logTime + "," + message + "\n";
-        errorFile->flush();
-    }
-    else
-    {
-        qDebug() << "******** Failed to write" << message << "to file" << errorFile->fileName();
-    }
-    errorFile->close();
+  if( errorFile->open( QIODevice::Append | QIODevice::ReadWrite | QIODevice::Unbuffered ) )
+  {
+    QTextStream out(errorFile);
+    out << logTime + "," + message + "\n";
+    errorFile->flush();
+  }
+  else
+  {
+    qDebug() << "******** Failed to write" << message << "to file" << errorFile->fileName();
+  }
+  errorFile->close();
 }

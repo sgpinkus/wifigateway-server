@@ -9,7 +9,7 @@
 #include <unistd.h>
 
 namespace Ui {
-    class FileWatcher;
+class FileWatcher;
 }
 
 class FileWatcher : public QObject

@@ -143,7 +143,7 @@ bool FileWatcher::beingWatched()
 
   if(paths.indexOf(watchedFile.fileName()) != -1)
   {
-     return true;
+    return true;
   }
   return false;
 }
