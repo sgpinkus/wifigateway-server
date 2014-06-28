@@ -18,13 +18,13 @@ class FileWatcher : public QObject
 
 public:
 
-  explicit FileWatcher( QString path, QObject * parent = 0 );
+  explicit FileWatcher(QString path, QObject * parent = 0);
   ~FileWatcher();
 
 private slots:
 
-  void watchedFileChanged( QString path );
-  void watchedDirChanged( QString path );
+  void watchedFileChanged(QString path);
+  void watchedDirChanged(QString path);
   void scan();
   bool beingWatched();
   bool isFileNewer();

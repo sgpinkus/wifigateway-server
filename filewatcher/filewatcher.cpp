@@ -2,25 +2,25 @@
 
 
 /**
- * Watch one file for new lines and sned them to client. File is identified by its name not inode
- * QFileSystemWatcher is good, this class wraps it to give exactly what we want.
- * Need to handle things like move delete touch, and keep watching for new lines without producing duplicate lines.
- * This class doe this and  I.f.s to client via a newLine() signal.
+ * Watch one file for new lines and send them to client. File is identified by its name not its inode.
+ * QFileSystemWatcher is good. This class wraps it to give exactly what we want.
+ * Handle things like move delete touch, while keep watching for new lines without producing duplicate lines.
+ * This class interfaces to the client via a newLine() signal.
  * Note if exactly the same thing is written (not appended) to the file twice it will not be detected.
  */
-FileWatcher::FileWatcher( QString path, QObject * parent ) : QObject( parent )
+FileWatcher::FileWatcher(QString path, QObject * parent) : QObject(parent)
 {
   watchedFile = new QFile(path,this);
   watchedDir = new QDir(path);
   watchedDir->cdUp();
   watcher = new QFileSystemWatcher(this);
-  watcher->addPath( watchedFile->fileName() );
-  watcher->addPath( watchedDir->path() );
+  watcher->addPath(watchedFile->fileName());
+  watcher->addPath(watchedDir->path());
   currSize = watchedFile->size();
   // Using the inode like a file id.
   inode = getINode();
-  QObject::connect( watcher, SIGNAL(directoryChanged(QString)), this, SLOT(watchedDirChanged(QString)) );
-  QObject::connect( watcher, SIGNAL(fileChanged(QString)), this, SLOT(watchedFileChanged(QString)) );
+  QObject::connect(watcher, SIGNAL(directoryChanged(QString)), this, SLOT(watchedDirChanged(QString)));
+  QObject::connect(watcher, SIGNAL(fileChanged(QString)), this, SLOT(watchedFileChanged(QString)));
 }
 \
 
@@ -32,15 +32,15 @@ FileWatcher::~FileWatcher()
 
 /**
  * The file was modified renamed or deleted. Need to rewatch if renamed or deleted.
- * NOTE when Qt says "signaled when been modified, renamed or removed from disk",
+ * Note when Qt says "signaled when been modified, renamed or removed from disk",
  *  by "modified" they mean any metadata not m_time - see inotfiy IN_ALL_EVENTS.
  * Start scan from beginning if the file is newer than the one we were reading last time.
  */
-void FileWatcher::watchedFileChanged( QString path )
+void FileWatcher::watchedFileChanged(QString path)
 {
   qDebug() << "In function " << __func__ << " " << currSize << " " << inode;
 
-  if( isFileNewer() )
+  if(isFileNewer())
   {
     qDebug() << "FILE IS NEW";
     currSize = 0;
@@ -55,13 +55,13 @@ void FileWatcher::watchedFileChanged( QString path )
  * currSize <- 0; watch; rescan;
  * This is needed since if the file is moved or deleted it is unwatched.
  */
-void FileWatcher::watchedDirChanged( QString path )
+void FileWatcher::watchedDirChanged(QString path)
 {
   qDebug() << "In function " << __func__ << beingWatched() << watchedFile->exists();
-  if( watchedFile->exists() && ! beingWatched() )
+  if(watchedFile->exists() && ! beingWatched())
   {
     qDebug() << "File was not being watched. Watching";
-    watcher->addPath( watchedFile->fileName() );
+    watcher->addPath(watchedFile->fileName());
     currSize = 0;
     inode = getINode();
     FileWatcher::scan();
@@ -84,7 +84,7 @@ bool FileWatcher::isFileNewer()
   size_t newSize = watchedFile->size();
   qDebug() << "In function " << __func__ << inode << newINode;
 
-  if( ( newINode != inode ) || ( newSize < currSize ) )
+  if((newINode != inode) || (newSize < currSize))
   {
     return true;
   }
@@ -97,7 +97,7 @@ ino_t FileWatcher::getINode()
   struct stat stat_buf;
   ino_t retval = 0;
 
-  if( stat( watchedFile->fileName().toAscii(), &stat_buf ) != -1 )
+  if(stat(watchedFile->fileName().toAscii(), &stat_buf) != -1)
   {
     retval = stat_buf.st_ino;
   }
@@ -114,14 +114,15 @@ void FileWatcher::scan()
   QString line;
   bool retval = false;
 
-  if( watchedFile->open( QIODevice::ReadOnly ) )
+  if(watchedFile->open(QIODevice::ReadOnly))
   {
-    watchedFile->seek( currSize );
+    watchedFile->seek(currSize);
     line = watchedFile->readLine(1024);
 
-    while( line.size() > 0 )
+    while(line.size() > 0)
     {
       line = line.trimmed();
+      qDebug() << "EMMITEE";
       emit newLine(line);
       line = watchedFile->readLine();
     }
@@ -141,7 +142,7 @@ bool FileWatcher::beingWatched()
 
   //foreach(QString p, paths){qDebug() << p;}
 
-  if( paths.indexOf( watchedFile->fileName() ) != -1 )
+  if(paths.indexOf(watchedFile->fileName()) != -1)
   {
      return true;
   }
