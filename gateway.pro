@@ -17,7 +17,6 @@ TEMPLATE = app
 HEADERS += controller.h \
            controllerdbusadaptor.h \
            files.h \
-           gateway.h \
            logger.h \
            quotabeacon.h \
            session.h \
@@ -38,4 +37,4 @@ OTHER_FILES += \
     script/gw_init.sh \
     script/gw_functions.sh \
     script/gw_add_host.sh \
-    wifigateway.pro
+    #wifigateway.pro
