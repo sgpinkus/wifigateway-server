@@ -1,6 +1,8 @@
 #include "controllerdbusadaptor.h"
 
-// Marshall the structureure data into a D-Bus argument
+/**
+ * Marshall the structured data into a D-Bus argument.
+ */
 QDBusArgument &operator<<(QDBusArgument &argument, const SessionExport &structure)
 {
     argument.beginStructure();
@@ -21,7 +23,10 @@ QDBusArgument &operator<<(QDBusArgument &argument, const SessionExport &structur
     return argument;
 }
 
-// Retrieve the structureure data from the D-Bus argument
+
+/**
+ * Retrieve the structured data from the D-Bus argument.
+ */
 const QDBusArgument &operator>>(const QDBusArgument &argument, SessionExport &structure)
 {
     argument.beginStructure();
@@ -43,8 +48,7 @@ const QDBusArgument &operator>>(const QDBusArgument &argument, SessionExport &st
 }
 
 /**
- * Passthru everything to the actual object...
- * Forcing this seems sensless but its required.
+ * Passes thru everything to the actual object from the adaptor.
  */
 ControllerDBusAdaptor::ControllerDBusAdaptor(Controller * parent) : QDBusAbstractAdaptor(parent)
 {

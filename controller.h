@@ -25,7 +25,8 @@ public:
     const static quint32 ACTIVITY_WARNING_TIME = 3;
     const static quint32 PAUSE_WARNING_TIME = 3;
     typedef enum { UNINITIALIZED, STARTED, PAUSED, ENDED } SessionState;
-    // export this over dbus.
+
+    // Main struct describing a session.
     typedef struct
     {
         QString IP;
@@ -42,9 +43,6 @@ public:
         qint32 endTimeRemaining;
         qint32 sessionTime;
     } Session;
-
-    RunCommand * runcommand;
-    QTimer * tickTimer;
 
 public slots:
     int newSession(QString IP);
@@ -63,8 +61,10 @@ public slots:
     void tick();
 
 private:
+    RunCommand runcommand;
+    QTimer tickTimer;
     QMap <QString,Session*> sessions;
-    QuotaBeacon * beacon;
+    QuotaBeacon beacon;
 
     void initSession(Session * session, QString IP);
     void removeSession(QString IP);

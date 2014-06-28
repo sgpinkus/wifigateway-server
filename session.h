@@ -10,7 +10,6 @@ class Session : public QObject
     Q_OBJECT
 public:
     explicit Session(QString IP, QObject *parent = 0);
-
 };
 
 #endif // SESSION_H

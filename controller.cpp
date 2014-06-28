@@ -3,33 +3,30 @@
 
 /**
  * Implements a basic free access Internet gateway.
- * Basic as in no user persistence or awareness only sessions.
+ * Basic as in no user persistence or awareness, only sessions.
  * Is a wrapper on IPTables providing the necessary state to manage sessions.
- * Session have time,quota,bandwidth as well as other timers.
+ * Session have time,quota,bandwidth as well as other timers. {@see Controller::Session}.
  * Note quota is managed here rather than in IPTables so we know how much is used.
- * see QuotaBeacon hack getting update from IPTables.
+ * @see QuotaBeacon.
  */
 Controller::Controller(QObject *parent) : QObject(parent)
 {
     QString buf;
     int success;
-    runcommand = new RunCommand(this);
-    beacon = new QuotaBeacon(this);
 
     // script inits firewall and chain(s) assumed by add, rem, etc.
     QString cmd = QDir::current().path() + "/gw_init.sh";
-    success = runcommand->runCommandExec( cmd, &buf, 2000 );
-    if( success != 0 )
+    success = runcommand.runCommandExec(cmd, buf, 2000);
+    if(success != 0)
     {
         qDebug() << "Failed IPTables rule init! " << success << buf;
     }
 
-    connect(beacon,SIGNAL(quotaEvent(QString)),this,SLOT(updateQuotaRemaining(QString)));
+    connect(&beacon,SIGNAL(quotaEvent(QString)),this,SLOT(updateQuotaRemaining(QString)));
 
-    // all time updates ofd this.
-    tickTimer = new QTimer(this);
-    connect(tickTimer,SIGNAL(timeout()),this,SLOT(tick()));
-    tickTimer->start(1000);
+    // all time updates off this.
+    connect(&tickTimer,SIGNAL(timeout()),this,SLOT(tick()));
+    tickTimer.start(1000);
 }
 
 
@@ -46,13 +43,13 @@ int Controller::newSession(QString IP)
     qDebug() << __FILE__ << __func__;
     int success = -1;
 
-    if( ! sessions.contains(IP) )
+    if(! sessions.contains(IP))
     {
         Session * session = new Session;
         initSession(session, IP);
         sessions.insert(IP,session);
         success = startSession(IP);
-        if( success != 0 )
+        if(success != 0)
         {
             removeSession(IP);
         }
@@ -70,7 +67,7 @@ int Controller::startSession(QString IP)
     qDebug() << __FILE__ << __func__;
     int success = -1;
 
-    if( sessions.contains(IP) )
+    if(sessions.contains(IP))
     {
         Session * session = sessions.value(IP);
         QString buf;
@@ -80,9 +77,9 @@ int Controller::startSession(QString IP)
                 + QString::number(session->bandwidth) + " "
                 + QString::number(session->quota);
         qDebug() << cmd;
-        success = runcommand->runCommandExec( cmd, &buf, 2000 );
+        success = runcommand.runCommandExec(cmd, buf, 2000);
         qDebug() << buf;
-        if( success != 0 )
+        if(success != 0)
         {
             qDebug() << "Failed IPTables rule insert " << success << buf;
         }
@@ -107,12 +104,12 @@ int Controller::pauseSession(QString IP)
     QString buf;
     int success = -1;
 
-    if( sessions.contains(IP) )
+    if(sessions.contains(IP))
     {
         QString cmd = QDir::current().path() + "/gw_remove_host.sh " + IP;
         Session * session = sessions.value(IP);
-        success = runcommand->runCommandExec( cmd, &buf, 2000 );
-        if( success == 0 )
+        success = runcommand.runCommandExec(cmd, buf, 2000);
+        if(success == 0)
         {
             session->state = Controller::PAUSED;
         }
@@ -136,13 +133,13 @@ int Controller::playSession(QString IP)
     QString buf;
     int success = -1;
 
-    if( sessions.contains(IP) )
+    if(sessions.contains(IP))
     {
         Session * session = sessions.value(IP);
-        if( session->state == Controller::PAUSED )
+        if(session->state == Controller::PAUSED)
         {
             success = startSession(IP);
-            if( success == 0 )
+            if(success == 0)
             {
                 session->activityTimeRemaining = Controller::ACTIVITY_TIME;
                 session->updateTimeRemaining = Controller::UPDATE_TIME;
@@ -152,7 +149,7 @@ int Controller::playSession(QString IP)
                 qDebug() << "Failed IPTables rule add " << success << buf;
             }
        }
-       else if( session->state == Controller::STARTED )
+       else if(session->state == Controller::STARTED)
        {
            success = 0;
        }
@@ -171,14 +168,14 @@ int Controller::endSession(QString IP)
     QString buf;
     int success = -1;
 
-    if( sessions.contains(IP) )
+    if(sessions.contains(IP))
     {
         Session * session = sessions.value(IP);
-        if( session->state != Controller::ENDED )
+        if(session->state != Controller::ENDED)
         {
             QString cmd = QDir::current().path() + "/gw_remove_host.sh " + IP;
-            success = runcommand->runCommandExec( cmd, &buf, 2000 );
-            if( success == 0 )
+            success = runcommand.runCommandExec(cmd, buf, 2000);
+            if(success == 0)
             {
                 session->state = Controller::ENDED;
             }
@@ -204,7 +201,7 @@ int Controller::updateSession(QString IP)
     qDebug() << __FILE__ << __func__;
     int success = -1;
 
-    if( sessions.contains(IP) )
+    if(sessions.contains(IP))
     {
         Session * session = sessions.value(IP);
         session->updateTimeRemaining = Controller::UPDATE_TIME;
@@ -223,7 +220,7 @@ int Controller::updateQuotaRemaining(QString IP)
     qDebug() << __FILE__ << __func__;
     int success = -1;
 
-    if( sessions.contains(IP) )
+    if(sessions.contains(IP))
     {
         Session * session = sessions.value(IP);
         session->quotaRemaining--;
@@ -242,7 +239,7 @@ int Controller::setBandwidth(QString IP, qint32 bw)
     qDebug() << __FILE__ << __func__;
     int success = -1;
 
-    if( sessions.contains(IP) )
+    if(sessions.contains(IP))
     {
         Session * session = sessions.value(IP);
         session->bandwidth = bw;
@@ -262,7 +259,7 @@ int Controller::setQuota(QString IP, qint32 quota)
     qDebug() << __FILE__ << __func__;
     int success = -1;
 
-    if( sessions.contains(IP) )
+    if(sessions.contains(IP))
     {
         Session * session = sessions.value(IP);
         session->quota = quota;
@@ -282,7 +279,7 @@ Controller::Session Controller::getStats(QString IP)
     qDebug() << __FILE__ << __func__;
     Controller::Session retval = {"","",Controller::UNINITIALIZED,0,0,0,0,0,0,0,0,0,0};
 
-    if( sessions.contains(IP) )
+    if(sessions.contains(IP))
     {
         Session * session = sessions.value(IP);
         retval = *session;
@@ -319,33 +316,33 @@ void Controller::tick()
             case Controller::STARTED :
             {
                 session->pauseTimeRemaining = Controller::PAUSE_TIME;
-                session->timeRemaining = ( session->timeRemaining > 0 ? session->timeRemaining - 1 : 0 );
-                session->updateTimeRemaining = ( session->updateTimeRemaining > 0 ? session->updateTimeRemaining - 1 : 0 );
+                session->timeRemaining = (session->timeRemaining > 0 ? session->timeRemaining - 1 : 0);
+                session->updateTimeRemaining = (session->updateTimeRemaining > 0 ? session->updateTimeRemaining - 1 : 0);
                 //implement activity ping from IPTables.
-                //session->activityTimeRemaining = ( session->activityTimeRemaining > 0 ? session->activityTimeRemaining - 1 : 0 );
+                //session->activityTimeRemaining = (session->activityTimeRemaining > 0 ? session->activityTimeRemaining - 1 : 0);
                 session->sessionTime++;
 
-                if( ( session->time > 0 ) && session->timeRemaining == 0 )
+                if((session->time > 0) && session->timeRemaining == 0)
                 {
                     endSession(session->IP);
                 }
-                else if( session->activityTimeRemaining == 0 )
+                else if(session->activityTimeRemaining == 0)
                 {
                     endSession(session->IP);
                 }
-                else if( session->updateTimeRemaining == 0 )
+                else if(session->updateTimeRemaining == 0)
                 {
                     endSession(session->IP);
                 }
-                else if( session->quotaRemaining == 0 )
+                else if(session->quotaRemaining == 0)
                 {
                     endSession(session->IP);
                 }
-                else if( session->timeRemaining <= Controller::TIME_WARNING_TIME )
+                else if(session->timeRemaining <= Controller::TIME_WARNING_TIME)
                 {
                     emit timeWarning();
                 }
-                else if( session->activityTimeRemaining <= Controller::ACTIVITY_WARNING_TIME )
+                else if(session->activityTimeRemaining <= Controller::ACTIVITY_WARNING_TIME)
                 {
                     emit activityWarning();
                 }
@@ -353,14 +350,14 @@ void Controller::tick()
             }
             case Controller::PAUSED :
             {
-                session->pauseTimeRemaining = ( session->pauseTimeRemaining > 0 ? session->pauseTimeRemaining - 1 : 0 );
-                if( session->pauseTimeRemaining == 0 )
+                session->pauseTimeRemaining = (session->pauseTimeRemaining > 0 ? session->pauseTimeRemaining - 1 : 0);
+                if(session->pauseTimeRemaining == 0)
                 {
                     session->pauseTimeRemaining = Controller::PAUSE_TIME;
                     playSession(session->IP);
 
                 }
-                if( session->pauseTimeRemaining <= Controller::PAUSE_WARNING_TIME )
+                if(session->pauseTimeRemaining <= Controller::PAUSE_WARNING_TIME)
                 {
                     emit pauseWarning();
                 }
@@ -368,8 +365,8 @@ void Controller::tick()
             }
             case Controller::ENDED :
             {
-                session->endTimeRemaining = ( session->endTimeRemaining ? session->endTimeRemaining - 1 : 0 );
-                if( session->endTimeRemaining == 0 )
+                session->endTimeRemaining = (session->endTimeRemaining ? session->endTimeRemaining - 1 : 0);
+                if(session->endTimeRemaining == 0)
                 {
                     removeSession(session->IP);
                 }
@@ -423,7 +420,7 @@ void Controller::dumpSession(Controller::Session * session)
 void Controller::removeSession(QString IP)
 {
     qDebug() << __FILE__ << __func__;
-    if( sessions.contains(IP) )
+    if(sessions.contains(IP))
     {
         Session * session = sessions.value(IP);
         sessions.remove(IP);
@@ -436,7 +433,7 @@ void Controller::removeSession(Session * session)
 {
     qDebug() << __FILE__ << __func__;
     QString key = sessions.key(session);
-    if( key.length() == 0 )
+    if(key.length() == 0)
     {
         sessions.remove(key);
         delete session;

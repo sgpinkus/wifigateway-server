@@ -1,15 +1,13 @@
 #ifndef SESSIONEXPORT_H
 #define SESSIONEXPORT_H
 
-/**
- * Exactly the same as Controller::Session,
- * but decalred usbale to marshall datat in/out of dbus struct.
- */
-
 #include <QString>
 #include <QDBusMetaType>
 
-
+/**
+ * Exactly the same as Controller::Session,
+ * but declared for marshalling data in/out of dbus.
+ */
 struct SessionExport
 {
     QString IP;
@@ -27,6 +25,5 @@ struct SessionExport
     qint32 sessionTime;
 };
 Q_DECLARE_METATYPE(SessionExport)
-
 
 #endif // SESSIONEXPORT_H

@@ -14,9 +14,9 @@ Logger * Logger::logger = 0;
 
 /**
  * Basic logger object.
- * This is an a singleton object not a class is basically because of date in log path.
- * Note there are two main log error and msg but you can pass in any filename.
- * Pointers are kept to the open (they are actually open), for eff (lost if the file name changes alot).
+ * This is a singleton object not a class - basically because of the date in log path.
+ * Note there are two main log files; error and msg. But you can pass in any filename.
+ * Pointers are kept to the open (they are actually open) for eff (lost if the file name changes alot).
  */
 Logger::Logger(QObject *parent) : QObject(parent)
 {

@@ -11,8 +11,7 @@
 #define DBUS_OBJECT_PATH "/com/epicmorsel/dbus/gateway"
 
 /**
- * Pipes dbus method call directly to object implementing backend.
- * Nothing else.
+ * Pipes dbus method calls to object implementing the backend.
  */
 class ControllerDBusAdaptor : public QDBusAbstractAdaptor
 {

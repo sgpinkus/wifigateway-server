@@ -13,27 +13,27 @@ CONFIG   -= app_bundle
 
 TEMPLATE = app
 
+# Input
+HEADERS += controller.h \
+           controllerdbusadaptor.h \
+           files.h \
+           gateway.h \
+           logger.h \
+           quotabeacon.h \
+           session.h \
+           sessionexport.h
 
-SOURCES += main.cpp \
-    controller.cpp \
-    controllerdbusadaptor.cpp \
-    runcommand/runcommand.cpp \
-    logger.cpp \
-    filewatcher/filewatcher.cpp \
-    quotabeacon.cpp \
-    runcommand/test/runcommandtest.cpp
-
-HEADERS += \
-    controller.h \
-    controllerdbusadaptor.h \
-    runcommand/runcommand.h \
-    logger.h \
-    files.h \
-    sessionexport.h \
-    filewatcher/filewatcher.h \
-    quotabeacon.h
+SOURCES += controller.cpp \
+           controllerdbusadaptor.cpp \
+           logger.cpp \
+           main.cpp \
+           quotabeacon.cpp \
+           session.cpp \
+           sessionexport.cpp
 
 OTHER_FILES += \
+    filewatcher/ \
+    runcommand/ \
     script/gw_remove_host.sh \
     script/gw_init.sh \
     script/gw_functions.sh \
