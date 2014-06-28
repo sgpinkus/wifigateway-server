@@ -35,9 +35,9 @@ signals:
 
 private:
 
-  QFile * watchedFile;
-  QDir * watchedDir;
-  QFileSystemWatcher * watcher;
+  QFile watchedFile;
+  QDir watchedDir;
+  QFileSystemWatcher watcher;
   unsigned int currSize;
   ino_t inode;
 

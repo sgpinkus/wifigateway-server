@@ -8,25 +8,24 @@
  * This class interfaces to the client via a newLine() signal.
  * Note if exactly the same thing is written (not appended) to the file twice it will not be detected.
  */
-FileWatcher::FileWatcher(QString path, QObject * parent) : QObject(parent)
+FileWatcher::FileWatcher(QString path, QObject * parent) : QObject(parent),
+  watchedFile(path),
+  watchedDir(path)
 {
-  watchedFile = new QFile(path,this);
-  watchedDir = new QDir(path);
-  watchedDir->cdUp();
-  watcher = new QFileSystemWatcher(this);
-  watcher->addPath(watchedFile->fileName());
-  watcher->addPath(watchedDir->path());
-  currSize = watchedFile->size();
-  // Using the inode like a file id.
+  watchedDir.cdUp();
+  watcher.addPath(watchedFile.fileName());
+  // Argh have to watch the whole path to handle edge cases.
+  watcher.addPath(watchedDir.path());
+  currSize = watchedFile.size();
+  // Use the inode like a file id.
   inode = getINode();
-  QObject::connect(watcher, SIGNAL(directoryChanged(QString)), this, SLOT(watchedDirChanged(QString)));
-  QObject::connect(watcher, SIGNAL(fileChanged(QString)), this, SLOT(watchedFileChanged(QString)));
+  QObject::connect(&watcher, SIGNAL(directoryChanged(QString)), this, SLOT(watchedDirChanged(QString)));
+  QObject::connect(&watcher, SIGNAL(fileChanged(QString)), this, SLOT(watchedFileChanged(QString)));
 }
-\
+
 
 FileWatcher::~FileWatcher()
 {
-    delete watchedDir;
 }
 
 
@@ -57,11 +56,11 @@ void FileWatcher::watchedFileChanged(QString path)
  */
 void FileWatcher::watchedDirChanged(QString path)
 {
-  qDebug() << "In function " << __func__ << beingWatched() << watchedFile->exists();
-  if(watchedFile->exists() && ! beingWatched())
+  qDebug() << "In function " << __func__ << beingWatched() << watchedFile.exists();
+  if(watchedFile.exists() && ! beingWatched())
   {
     qDebug() << "File was not being watched. Watching";
-    watcher->addPath(watchedFile->fileName());
+    watcher.addPath(watchedFile.fileName());
     currSize = 0;
     inode = getINode();
     FileWatcher::scan();
@@ -81,7 +80,7 @@ void FileWatcher::watchedDirChanged(QString path)
 bool FileWatcher::isFileNewer()
 {
   ino_t newINode = FileWatcher::getINode();
-  size_t newSize = watchedFile->size();
+  size_t newSize = watchedFile.size();
   qDebug() << "In function " << __func__ << inode << newINode;
 
   if((newINode != inode) || (newSize < currSize))
@@ -97,7 +96,7 @@ ino_t FileWatcher::getINode()
   struct stat stat_buf;
   ino_t retval = 0;
 
-  if(stat(watchedFile->fileName().toAscii(), &stat_buf) != -1)
+  if(stat(watchedFile.fileName().toAscii(), &stat_buf) != -1)
   {
     retval = stat_buf.st_ino;
   }
@@ -114,35 +113,35 @@ void FileWatcher::scan()
   QString line;
   bool retval = false;
 
-  if(watchedFile->open(QIODevice::ReadOnly))
+  if(watchedFile.open(QIODevice::ReadOnly))
   {
-    watchedFile->seek(currSize);
-    line = watchedFile->readLine(1024);
+    watchedFile.seek(currSize);
+    line = watchedFile.readLine(1024);
 
     while(line.size() > 0)
     {
       line = line.trimmed();
-      qDebug() << "EMMITEE";
+      qDebug() << "EMIT";
       emit newLine(line);
-      line = watchedFile->readLine();
+      line = watchedFile.readLine();
     }
-    currSize = watchedFile->pos();
+    currSize = watchedFile.pos();
   }
-  watchedFile->close();
+  watchedFile.close();
 }
 
 
 /**
- * Is watchedFile->fileName() being watched?
+ * Is watchedFile.fileName() being watched?
  */
 bool FileWatcher::beingWatched()
 {
   qDebug() << "In function " << __func__;
-  QStringList paths = watcher->files();
+  QStringList paths = watcher.files();
 
   //foreach(QString p, paths){qDebug() << p;}
 
-  if(paths.indexOf(watchedFile->fileName()) != -1)
+  if(paths.indexOf(watchedFile.fileName()) != -1)
   {
      return true;
   }
