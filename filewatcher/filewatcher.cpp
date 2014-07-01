@@ -1,3 +1,4 @@
+#include <stdexcept>
 #include "filewatcher.h"
 
 
@@ -9,16 +10,26 @@
  * Note if exactly the same thing is written (not appended) to the file twice it will not be detected.
  */
 FileWatcher::FileWatcher(QString path, QObject * parent) : QObject(parent),
-  watchedFile(path),
-  watchedDir(path)
+  watchedFile(path), watchedDir(path)
 {
-  watchedDir.cdUp();
+  if(!watchedFile.exists())
+  {
+    throw std::runtime_error(QString("Could not watch file %1. Does not exist?").arg(path).toAscii().data());
+  }
+  if(!(watchedFile.permissions() & QFile::ReadUser))
+  {
+     throw std::runtime_error(QString("Could not watch file %1. No permission.").arg(path).toAscii().data());
+  }
   watcher.addPath(watchedFile.fileName());
-  // Argh have to watch the whole path to handle edge cases.
+
+  // Argh have to watch the whole path to handle edge cases. This can be expensive.
+  watchedDir.cdUp();
   watcher.addPath(watchedDir.path());
   currSize = watchedFile.size();
+
   // Use the inode like a file id.
   inode = getINode();
+
   QObject::connect(&watcher, SIGNAL(directoryChanged(QString)), this, SLOT(watchedDirChanged(QString)));
   QObject::connect(&watcher, SIGNAL(fileChanged(QString)), this, SLOT(watchedFileChanged(QString)));
 }

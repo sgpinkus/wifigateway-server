@@ -11,7 +11,7 @@
 QT       += core dbus
 QT       -= gui
 TEMPLATE = app
-TARGET = wifigatewayserver
+TARGET = wifigateway-server
 CONFIG   += console
 CONFIG   -= app_bundle
 INCLUDEPATH += .
@@ -19,17 +19,19 @@ LIBS += -lruncommand -lfilewatcher -Lfilewatcher/ -Lruncommand/
 
 # Input
 HEADERS += controller.h \
-           controllerdbusadaptor.h \
-           files.h \
-           logger.h \
-           quotabeacon.h \
-           sessionexport.h
+    controllerdbusadaptor.h \
+    files.h \
+    logger.h \
+    quotabeacon.h \
+    sessionexport.h \
+    gatewaycoreapplication.h
 
 SOURCES += controller.cpp \
-           controllerdbusadaptor.cpp \
-           logger.cpp \
-           main.cpp \
-           quotabeacon.cpp
+    controllerdbusadaptor.cpp \
+    logger.cpp \
+    main.cpp \
+    quotabeacon.cpp \
+    gatewaycoreapplication.cpp
 
 OTHER_FILES += \
     filewatcher/ \
@@ -38,4 +40,4 @@ OTHER_FILES += \
     script/gw_init.sh \
     script/gw_functions.sh \
     script/gw_add_host.sh \
-    wifigateway.pro
+    wifigateway-server.pro

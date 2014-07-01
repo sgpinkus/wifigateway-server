@@ -15,7 +15,7 @@ Controller::Controller(QObject *parent) : QObject(parent)
   int success;
 
   // script inits firewall and chain(s) assumed by add, rem, etc.
-  QString cmd = QDir::current().path() + "/gw_init.sh";
+  QString cmd = QDir::current().path() + "/script/gw_init.sh";
   success = runcommand.runCommandExec(cmd, buf, 2000);
   if(success != 0)
   {
@@ -23,7 +23,6 @@ Controller::Controller(QObject *parent) : QObject(parent)
   }
 
   connect(&beacon,SIGNAL(quotaEvent(QString)),this,SLOT(updateQuotaRemaining(QString)));
-
   // all time updates off this.
   connect(&tickTimer,SIGNAL(timeout()),this,SLOT(tick()));
   tickTimer.start(1000);
@@ -31,11 +30,9 @@ Controller::Controller(QObject *parent) : QObject(parent)
 
 
 /**
- * Allows a host with given IP access to internet,
- * inserting IPTables rule(s), and initing record.
- * If record already exists 0 (success)  is returned and no record changes.
- * @todo separate init, and start into two operations.
- * @returns Zero on success, the result of IPTables add or -1 on other failure.
+ * Allow a host with given IP access to internet, inserting IPTables rule(s), and initing a record.
+ * If record already exists 0 (success) is returned and no record changes.
+ * @returns Zero on success, the result of IPTables add, or -1 on other failure.
  */
 int Controller::newSession(QString IP)
 {
@@ -43,7 +40,7 @@ int Controller::newSession(QString IP)
   qDebug() << __FILE__ << __func__;
   int success = -1;
 
-  if(! sessions.contains(IP))
+  if(!sessions.contains(IP))
   {
     Session * session = new Session;
     initSession(session, IP);
@@ -72,7 +69,7 @@ int Controller::startSession(QString IP)
     Session * session = sessions.value(IP);
     QString buf;
     QString cmd = QDir::current().path()
-                  + "/gw_add_host.sh "
+                  + "/script/gw_add_host.sh "
                   + IP + " "
                   + QString::number(session->bandwidth) + " "
                   + QString::number(session->quota);
@@ -106,7 +103,7 @@ int Controller::pauseSession(QString IP)
 
   if(sessions.contains(IP))
   {
-    QString cmd = QDir::current().path() + "/gw_remove_host.sh " + IP;
+    QString cmd = QDir::current().path() + "/script/gw_remove_host.sh " + IP;
     Session * session = sessions.value(IP);
     success = runcommand.runCommandExec(cmd, buf, 2000);
     if(success == 0)
@@ -173,7 +170,7 @@ int Controller::endSession(QString IP)
     Session * session = sessions.value(IP);
     if(session->state != Controller::ENDED)
     {
-      QString cmd = QDir::current().path() + "/gw_remove_host.sh " + IP;
+      QString cmd = QDir::current().path() + "/script/gw_remove_host.sh " + IP;
       success = runcommand.runCommandExec(cmd, buf, 2000);
       if(success == 0)
       {
@@ -305,6 +302,7 @@ QStringList Controller::getIPs()
 
 /**
  * Updates all timers.
+ * Mor eff than maintaining num session timers.
  */
 void Controller::tick()
 {

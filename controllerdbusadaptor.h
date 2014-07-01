@@ -1,14 +1,19 @@
 #ifndef CONTROLLERDBUSADAPTOR_H
 #define CONTROLLERDBUSADAPTOR_H
 
-#include <QDBusAbstractAdaptor>
+#include <QtDBus>
+#include <QtDebug>
 #include <QString>
 #include <QList>
-#include "controller.h"
+#include <QDBusMetaType>
+#include <QDBusAbstractAdaptor>
+#include "sessionexport.h"
+class Controller;
 
-#define DBUS_NAME "com.epicmorsel.dbus"
+#define DBUS_SERVICE "com.epicmorsel.dbus"
 #define DBUS_INTERFACE "com.epicmorsel.dbus.gateway"
 #define DBUS_OBJECT_PATH "/com/epicmorsel/dbus/gateway"
+#define DBUS_RETRIES 5
 
 /**
  * Pipes dbus method calls to object implementing the backend.
@@ -16,7 +21,7 @@
 class ControllerDBusAdaptor : public QDBusAbstractAdaptor
 {
   Q_OBJECT
-  Q_CLASSINFO("D-Bus Interface", "com.epicmorsel.dbus.gateway" )
+  Q_CLASSINFO("D-Bus Interface", "com.epicmorsel.dbus.gateway")
 
 public:
   ControllerDBusAdaptor(Controller * parent);
@@ -34,6 +39,10 @@ public slots:
 
 private:
   Controller * controller;
+  QDBusConnection bus;
+
+  bool registerService();
+  bool registerObject();
 };
 
 #endif // CONTROLLERDBUSADAPTOR_H

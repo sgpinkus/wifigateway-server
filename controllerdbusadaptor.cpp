@@ -1,4 +1,60 @@
+#include <QtDebug>
+#include <stdexcept>
 #include "controllerdbusadaptor.h"
+#include "controller.h"
+
+
+/**
+ * Passes thru everything to the actual object from the adaptor.
+ * Note since we using the system dbus, you need to configure permissions for this app.
+ */
+ControllerDBusAdaptor::ControllerDBusAdaptor(Controller * parent) : QDBusAbstractAdaptor(parent),
+  controller(parent),
+  bus(QDBusConnection::connectToBus(QDBusConnection::SystemBus, DBUS_SERVICE))
+{
+  if(!bus.isConnected())
+  {
+    throw std::runtime_error("No DBUS");
+  }
+  if(!registerService())
+  {
+    throw std::runtime_error("DBUS service registration failed");
+  }
+  if(!registerObject())
+  {
+    throw std::runtime_error("DBUS object registration failed");
+  }
+
+  qDebug() << "DBus connection established. BaseName=" << bus.baseService() << ", Name=" << bus.name();
+  // Dynamically register type for comms over dbus.
+  qDBusRegisterMetaType<SessionExport>();
+}
+
+
+bool ControllerDBusAdaptor::registerService()
+{
+  int retries = 0;
+  while(!bus.registerService(DBUS_SERVICE) && retries++ < DBUS_RETRIES)
+  {
+    qDebug() << "DBUS service registration of name failed. Retrying.";
+    sleep(1);
+  }
+  return (retries<DBUS_RETRIES);
+}
+
+
+bool ControllerDBusAdaptor::registerObject()
+{
+  int retries = 0;
+  // connect to D-Bus and register Object - not the adaptor.
+  while(!bus.registerObject(DBUS_OBJECT_PATH, controller) && retries++ < DBUS_RETRIES)
+  {
+    qDebug() << "DBUS object registration failed";
+    sleep(1);
+  }
+  return (retries<DBUS_RETRIES);
+}
+
 
 /**
  * Marshall the structured data into a D-Bus argument.
@@ -45,16 +101,6 @@ const QDBusArgument &operator>>(const QDBusArgument &argument, SessionExport &st
            >> structure.sessionTime;
   argument.endStructure();
   return argument;
-}
-
-/**
- * Passes thru everything to the actual object from the adaptor.
- */
-ControllerDBusAdaptor::ControllerDBusAdaptor(Controller * parent) : QDBusAbstractAdaptor(parent)
-{
-  controller = parent;
-  // Dynamically register type for comms over dbus.
-  qDBusRegisterMetaType<SessionExport>();
 }
 
 int ControllerDBusAdaptor::newSession(QString IP)
