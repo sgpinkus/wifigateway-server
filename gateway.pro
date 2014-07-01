@@ -16,6 +16,7 @@ CONFIG   += console
 CONFIG   -= app_bundle
 INCLUDEPATH += .
 LIBS += -lruncommand -lfilewatcher -Lfilewatcher/ -Lruncommand/
+PRE_TARGETDEPS += runcommand/libruncommand.a filewatcher/libfilewatcher.a
 
 # Input
 HEADERS += controller.h \
