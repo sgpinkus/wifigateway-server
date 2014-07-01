@@ -1,1 +1,0 @@
-script/gw_functions.sh
