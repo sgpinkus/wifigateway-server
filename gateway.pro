@@ -4,14 +4,18 @@
 #
 #-------------------------------------------------
 
+!include(common.pri) {
+  error("Failed loading common.pri")
+}
+
 QT       += core dbus
 QT       -= gui
-
-TARGET = gateway
+TEMPLATE = app
+TARGET = wifigatewayserver
 CONFIG   += console
 CONFIG   -= app_bundle
-
-TEMPLATE = app
+INCLUDEPATH += .
+LIBS += -lruncommand -lfilewatcher -Lfilewatcher/ -Lruncommand/
 
 # Input
 HEADERS += controller.h \
@@ -19,16 +23,13 @@ HEADERS += controller.h \
            files.h \
            logger.h \
            quotabeacon.h \
-           session.h \
            sessionexport.h
 
 SOURCES += controller.cpp \
            controllerdbusadaptor.cpp \
            logger.cpp \
            main.cpp \
-           quotabeacon.cpp \
-           session.cpp \
-           sessionexport.cpp
+           quotabeacon.cpp
 
 OTHER_FILES += \
     filewatcher/ \
@@ -37,4 +38,4 @@ OTHER_FILES += \
     script/gw_init.sh \
     script/gw_functions.sh \
     script/gw_add_host.sh \
-    #wifigateway.pro
+    wifigateway.pro
