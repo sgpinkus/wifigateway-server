@@ -9,7 +9,7 @@ INBOUND_UDP_ALLOW="domain,111,2049,bootpc,bootps"
 # Swap for a wifi GW and setup AP.
 EXTIF="wlan0"
 INTIF="eth0"
-NETWORK=192.168.0.0
+NETWORK=10.1.1.0
 NETMASK=24
 DEFAULT_BANDWIDTH=100  # Packets/s
 DEFAULT_QUOTA=500
@@ -51,19 +51,19 @@ function gw_set_iptables_default_policy()
 # Nothing to do with actual gateway.
 function gw_set_iptables_input_firewall()
 {
-  iptables -P INPUT DROP 
-  # Firewall 
+  iptables -P INPUT DROP
+  # Firewall
   iptables -A INPUT -m comment --comment "firewall-iptables firewall rules"
   # We can talk to ourselves freely.
   # Allow all outgoing connections we start.
   # Allowing ssh, http, https, vnc - youll have to come and edit this as your firewall rules!
   # TODO: allow ICMP from me to me
   iptables -A INPUT -i lo -j ACCEPT
-  iptables -A INPUT -p icmp -j ACCEPT 
+  iptables -A INPUT -p icmp -j ACCEPT
   iptables -A INPUT -m state --state RELATED,ESTABLISHED -j ACCEPT
   # iptables -A INPUT -p tcp -m state --state NEW -m tcp --dport 22 -j ACCEPT
   [[ -n $INBOUND_TCP_ALLOW ]] && iptables -A INPUT -p tcp -m multiport --destination-port $INBOUND_TCP_ALLOW -j ACCEPT
-  [[ -n $INBOUND_UDP_ALLOW ]] && iptables -A INPUT -p udp -m multiport --destination-port $INBOUND_UDP_ALLOW -j ACCEPT  
+  [[ -n $INBOUND_UDP_ALLOW ]] && iptables -A INPUT -p udp -m multiport --destination-port $INBOUND_UDP_ALLOW -j ACCEPT
   # NFS! What port will satisfy you?!
   iptables -A INPUT --src ${NETWORK}/${NETMASK} -j ACCEPT
 }
@@ -96,7 +96,7 @@ function gw_init()
   gw_set_iptables_input_firewall
   # Init chains used to implement gateway.
   iptables -t mangle -N hosts_allowed
-  iptables -t filter -N hosts_bandwidth 
+  iptables -t filter -N hosts_bandwidth
   iptables -t filter -N hosts_quota
   # PREROUTING
   # hosts_allowed marks allowed packets.
@@ -130,7 +130,7 @@ function gw_add_host()
   ip="$1"
   bw=${2:-$DEFAULT_BANDWIDTH}
   qo=${3:-$DEFAULT_QUOTA}
-  
+
   if [[ -z `gw_get_host_entry "$1"` ]]
   then
     iptables -t mangle -A hosts_allowed -s "$1" -j MARK --set-mark 1/1
@@ -145,7 +145,7 @@ function gw_remove_host()
 {
   [[ -n "$1" ]] || error "Invalid parameters"
   echo "$1" | egrep -o -q "^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}" || error "Invalid address"
-  
+
   index=`gw_get_host_entry_num "$1"`
   if [[ -n $index ]]
   then
@@ -154,7 +154,7 @@ function gw_remove_host()
     iptables -t filter -D hosts_quota $index
   fi
   gw_update_hosts_db
-}  
+}
 
 
 function gw_get_host_entry()
