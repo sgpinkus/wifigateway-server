@@ -1,5 +1,4 @@
 #include "controller.h"
-#include "logger.h"
 
 /**
  * Implements a basic free access Internet gateway.
@@ -232,7 +231,7 @@ int Controller::updateQuotaRemaining(QString IP)
 /**
  * Set bandwidth. Hack to get it into IP tables.
  */
-int Controller::setBandwidth(QString IP, qint32 bw)
+int Controller::setBandwidth(QString IP, quint32 bw)
 {
   qDebug() << __FILE__ << __func__;
   int success = -1;
@@ -252,7 +251,7 @@ int Controller::setBandwidth(QString IP, qint32 bw)
 /**
  * Set quota. Hack to get it into IP tables.
  */
-int Controller::setQuota(QString IP, qint32 quota)
+int Controller::setQuota(QString IP, quint32 quota)
 {
   qDebug() << __FILE__ << __func__;
   int success = -1;

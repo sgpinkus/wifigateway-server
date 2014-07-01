@@ -1,5 +1,6 @@
 #include <stdexcept>
 #include "filewatcher.h"
+#define UNUSED(x) (void)(x)
 
 
 /**
@@ -48,6 +49,7 @@ FileWatcher::~FileWatcher()
  */
 void FileWatcher::watchedFileChanged(QString path)
 {
+  UNUSED(path);
   qDebug() << "In function " << __func__ << " " << currSize << " " << inode;
 
   if(isFileNewer())
@@ -67,6 +69,7 @@ void FileWatcher::watchedFileChanged(QString path)
  */
 void FileWatcher::watchedDirChanged(QString path)
 {
+  UNUSED(path);
   qDebug() << "In function " << __func__ << beingWatched() << watchedFile.exists();
   if(watchedFile.exists() && ! beingWatched())
   {
@@ -122,7 +125,6 @@ void FileWatcher::scan()
 {
   qDebug() << "In function " << __func__;
   QString line;
-  bool retval = false;
 
   if(watchedFile.open(QIODevice::ReadOnly))
   {

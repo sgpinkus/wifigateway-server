@@ -21,14 +21,12 @@ LIBS += -lruncommand -lfilewatcher -Lfilewatcher/ -Lruncommand/
 HEADERS += controller.h \
     controllerdbusadaptor.h \
     files.h \
-    logger.h \
     quotabeacon.h \
     sessionexport.h \
     gatewaycoreapplication.h
 
 SOURCES += controller.cpp \
     controllerdbusadaptor.cpp \
-    logger.cpp \
     main.cpp \
     quotabeacon.cpp \
     gatewaycoreapplication.cpp

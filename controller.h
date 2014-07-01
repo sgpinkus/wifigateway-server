@@ -32,16 +32,16 @@ public:
     QString IP;
     QString MAC;
     SessionState state;
-    qint32 time;
-    qint32 quota;
-    qint32 bandwidth;
-    qint32 timeRemaining;
-    qint32 quotaRemaining;
-    qint32 activityTimeRemaining;
-    qint32 updateTimeRemaining;
-    qint32 pauseTimeRemaining;
-    qint32 endTimeRemaining;
-    qint32 sessionTime;
+    quint32 time;
+    quint32 quota;
+    quint32 bandwidth;
+    quint32 timeRemaining;
+    quint32 quotaRemaining;
+    quint32 activityTimeRemaining;
+    quint32 updateTimeRemaining;
+    quint32 pauseTimeRemaining;
+    quint32 endTimeRemaining;
+    quint32 sessionTime;
   } Session;
 
 public slots:
@@ -51,8 +51,8 @@ public slots:
   int endSession(QString IP);
   int updateSession(QString IP);
   int startSession(QString IP);
-  int setBandwidth(QString IP, qint32 bw);
-  int setQuota(QString IP, qint32 quota);
+  int setBandwidth(QString IP, quint32 bw);
+  int setQuota(QString IP, quint32 quota);
   int updateQuotaRemaining(QString IP);
   Session getStats(QString IP);
   QList <Session> getAllStats();

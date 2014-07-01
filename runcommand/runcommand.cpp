@@ -9,9 +9,7 @@
  */
 RunCommand::RunCommand(QObject * parent) : QProcess(parent)
 {
-  e = new QEventLoop(this);
-  t = new QTimer(this);
-  t->setSingleShot(true);
+  timer.setSingleShot(true);
 }
 
 
@@ -23,8 +21,8 @@ RunCommand::RunCommand(QObject * parent) : QProcess(parent)
 void RunCommand::finishedInternal(int result)
 {
   disconnect(this, SIGNAL(finished(int)), this, SLOT(finishedInternal(int)));
-  disconnect(t, SIGNAL(timeout()), this, SLOT(finishedInternalTimeout()));
-  t->stop();
+  disconnect(&timer, SIGNAL(timeout()), this, SLOT(finishedInternalTimeout()));
+  timer.stop();
   this->kill();
   this->waitForFinished();
   QString output;
@@ -43,11 +41,11 @@ void RunCommand::finishedInternal(int result)
 void RunCommand::finishedInternalExec(int result)
 {
   disconnect(this, SIGNAL(finished(int)), this, SLOT(finishedInternalExec(int)));
-  disconnect(t, SIGNAL(timeout()), this, SLOT(finishedInternalExecTimeout()));
-  t->stop();
+  disconnect(&timer, SIGNAL(timeout()), this, SLOT(finishedInternalExecTimeout()));
+  timer.stop();
   this->kill();
   this->waitForFinished();
-  e->exit(result);
+  el.exit(result);
 }
 
 
@@ -85,8 +83,8 @@ int RunCommand::runCommand(QString cmd, int timeout)
     args << cmd;
 
     this->start("/bin/bash", args);
-    t->start(timeout);
-    connect(t, SIGNAL(timeout()), SLOT(finishedInternalTimeout()));
+    timer.start(timeout);
+    connect(&timer, SIGNAL(timeout()), SLOT(finishedInternalTimeout()));
     connect(this, SIGNAL(finished(int)), this, SLOT(finishedInternal(int)));
   }
   else {
@@ -114,10 +112,10 @@ int RunCommand::runCommandExec(QString cmd, QString& strBuf, int timeout)
     args << cmd;
     qDebug() << args;
     this->start("/bin/bash", args);
-    t->start(timeout);
-    connect(t, SIGNAL(timeout()), SLOT(finishedInternalExecTimeout()));
+    timer.start(timeout);
+    connect(&timer, SIGNAL(timeout()), SLOT(finishedInternalExecTimeout()));
     connect(this, SIGNAL(finished(int)), this, SLOT(finishedInternalExec(int)));
-    retval = e->exec();
+    retval = el.exec();
     strBuf = this->readAll();
   }
   return retval;

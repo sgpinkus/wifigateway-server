@@ -25,8 +25,8 @@ signals:
   void finished( int exitCode, QString output );
 
 private:
-  QEventLoop * e;
-  QTimer * t;
+  QEventLoop el;
+  QTimer timer;
 };
 
 #endif // RUNCOMMAND_H
