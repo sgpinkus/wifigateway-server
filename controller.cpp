@@ -1,3 +1,4 @@
+#include <stdexcept>
 #include "controller.h"
 
 /**
@@ -18,13 +19,24 @@ Controller::Controller(QObject *parent) : QObject(parent)
   success = runcommand.runCommandExec(cmd, buf, 2000);
   if(success != 0)
   {
-    qDebug() << "Failed IPTables rule init! " << success << buf;
+    throw std::runtime_error(QString("Failed initializing IPTables rules: %1; %2").arg(success).arg(buf).toAscii().data());
   }
 
   connect(&beacon,SIGNAL(quotaEvent(QString)),this,SLOT(updateQuotaRemaining(QString)));
   // all time updates off this.
   connect(&tickTimer,SIGNAL(timeout()),this,SLOT(tick()));
   tickTimer.start(1000);
+}
+
+
+/**
+ * Do our best to tidy up our mess.
+ */
+Controller::~Controller()
+{
+  QString buf;
+  QString cmd = QDir::current().path() + "/script/gw_clean_up.sh";
+  runcommand.runCommandExec(cmd, buf, 2000);
 }
 
 

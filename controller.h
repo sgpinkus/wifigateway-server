@@ -14,6 +14,7 @@ class Controller : public QObject
   Q_OBJECT
 public:
   explicit Controller(QObject *parent = 0);
+  ~Controller();
   const static quint32 DEFAULT_QUOTA = 500;
   const static quint32 DEFAULT_TIME = 0;
   const static quint32 DEFAULT_BANDWIDTH = 1000;
