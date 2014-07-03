@@ -11,6 +11,7 @@ TEMPLATE = lib
 TARGET =
 DEPENDPATH += .
 INCLUDEPATH += .
+#CONFIG(release):DEFINES += QT_NO_DEBUG_OUTPUT
 
 # Input
 HEADERS += runcommand.h

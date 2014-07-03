@@ -17,6 +17,7 @@ CONFIG   -= app_bundle
 INCLUDEPATH += .
 LIBS += -lruncommand -lfilewatcher -Lfilewatcher/ -Lruncommand/
 PRE_TARGETDEPS += runcommand/libruncommand.a filewatcher/libfilewatcher.a
+#CONFIG(release):DEFINES += QT_NO_DEBUG_OUTPUT
 
 # Input
 HEADERS += controller.h \
