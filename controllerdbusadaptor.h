@@ -8,12 +8,8 @@
 #include <QDBusMetaType>
 #include <QDBusAbstractAdaptor>
 #include "sessionexport.h"
+#include "dbus.h"
 class Controller;
-
-#define DBUS_SERVICE "com.epicmorsel.dbus"
-#define DBUS_INTERFACE "com.epicmorsel.dbus.gateway"
-#define DBUS_OBJECT_PATH "/com/epicmorsel/dbus/gateway"
-#define DBUS_RETRIES 5
 
 /**
  * Pipes dbus method calls to object implementing the backend.

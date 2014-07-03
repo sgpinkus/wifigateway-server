@@ -23,6 +23,7 @@ PRE_TARGETDEPS += runcommand/libruncommand.a filewatcher/libfilewatcher.a
 HEADERS += controller.h \
     controllerdbusadaptor.h \
     files.h \
+    dbus.h \
     handle_signals.h \
     ec_simple.h \
     quotabeacon.h \
