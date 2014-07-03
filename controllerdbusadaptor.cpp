@@ -2,7 +2,7 @@
 #include <stdexcept>
 #include "controllerdbusadaptor.h"
 #include "controller.h"
-
+#define QT_NO_DEBUG_OUTPUT 1
 
 /**
  * Passes thru everything to the actual object from the adaptor.
@@ -65,8 +65,6 @@ QDBusArgument &operator<<(QDBusArgument &argument, const SessionExport &structur
   argument << structure.IP
            << structure.MAC
            << structure.state
-           << structure.time
-           << structure.quota
            << structure.bandwidth
            << structure.timeRemaining
            << structure.quotaRemaining
@@ -89,8 +87,6 @@ const QDBusArgument &operator>>(const QDBusArgument &argument, SessionExport &st
   argument >> structure.IP
            >> structure.MAC
            >> structure.state
-           >> structure.time
-           >> structure.quota
            >> structure.bandwidth
            >> structure.timeRemaining
            >> structure.quotaRemaining
@@ -128,15 +124,13 @@ int ControllerDBusAdaptor::updateSession(QString IP)
   return controller->updateSession(IP);
 }
 
-SessionExport ControllerDBusAdaptor::getStats(QString IP)
+SessionExport ControllerDBusAdaptor::getSession(QString IP)
 {
   SessionExport retval;
-  Controller::Session stats = controller->getStats(IP);
+  Controller::Session stats = controller->getSession(IP);
   retval.IP = 	stats.IP;
   retval.MAC = 	stats.MAC;
   retval.state = 	stats.state;
-  retval.time = 	stats.time;
-  retval.quota = 	stats.quota;
   retval.bandwidth = 	stats.bandwidth;
   retval.timeRemaining = 	stats.timeRemaining;
   retval.quotaRemaining = 	stats.quotaRemaining;

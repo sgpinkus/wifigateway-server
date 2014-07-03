@@ -34,7 +34,7 @@ public slots:
   int playSession(QString IP);
   int endSession(QString IP);
   int updateSession(QString IP);
-  SessionExport getStats(QString IP);
+  SessionExport getSession(QString IP);
   QStringList getIPs();
 
 private:

@@ -13,8 +13,6 @@ struct SessionExport
   QString IP;
   QString MAC;
   qint32 state;
-  qint32 time;
-  qint32 quota;
   qint32 bandwidth;
   qint32 timeRemaining;
   qint32 quotaRemaining;

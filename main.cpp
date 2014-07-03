@@ -1,9 +1,11 @@
 #include <QtGlobal>
+#include <QSettings>
 #include <stdexcept>
+#include "common.h"
+#include "files.h"
 #include "gatewaycoreapplication.h"
 #include "controller.h"
 #include "controllerdbusadaptor.h"
-
 
 int main(int argc, char *argv[])
 {
@@ -11,7 +13,8 @@ int main(int argc, char *argv[])
 
   try
   {
-    Controller controller;
+    QSettings settings(CONFIG_FILE, QSettings::IniFormat);
+    Controller controller(settings);
     ControllerDBusAdaptor adaptor(&controller);
     return a.exec();
   }
