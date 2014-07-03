@@ -39,6 +39,7 @@ Controller::Controller(QSettings& settings, QObject *parent) : QObject(parent),
 
 Controller::~Controller()
 {
+  qDebug() << __FILE__ << __func__;
   cleanup();
 }
 
@@ -48,6 +49,7 @@ Controller::~Controller()
  */
 void Controller::cleanup()
 {
+  qDebug() << __FILE__ << __func__;
   QString buf;
   QString cmd = QDir::current().path() + "/script/gw_clean_up.sh";
   runcommand.runCommandExec(cmd, buf, 2000);

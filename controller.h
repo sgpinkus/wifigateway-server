@@ -75,6 +75,8 @@ private:
   void removeSession(Session * session);
   void dumpSession(Session * session);
   void clearSessions();
+
+private slots:
   void cleanup();
 
 signals:

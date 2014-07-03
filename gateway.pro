@@ -23,6 +23,8 @@ PRE_TARGETDEPS += runcommand/libruncommand.a filewatcher/libfilewatcher.a
 HEADERS += controller.h \
     controllerdbusadaptor.h \
     files.h \
+    handle_signals.h \
+    ec_simple.h \
     quotabeacon.h \
     sessionexport.h \
     gatewaycoreapplication.h
@@ -30,6 +32,7 @@ HEADERS += controller.h \
 SOURCES += controller.cpp \
     controllerdbusadaptor.cpp \
     main.cpp \
+    handle_signals.c \
     quotabeacon.cpp \
     gatewaycoreapplication.cpp
 
