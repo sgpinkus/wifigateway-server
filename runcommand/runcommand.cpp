@@ -110,7 +110,6 @@ int RunCommand::runCommandExec(QString cmd, QString& strBuf, int timeout)
     retval = 0;
     args << "-c";
     args << cmd;
-    qDebug() << args;
     this->start("/bin/bash", args);
     timer.start(timeout);
     connect(&timer, SIGNAL(timeout()), SLOT(finishedInternalExecTimeout()));

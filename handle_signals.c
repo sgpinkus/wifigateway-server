@@ -73,7 +73,7 @@ static void handler(int signum)
     cleanup();
   }
 
-  //exit(EXIT_FAILURE);
+  exit(EXIT_FAILURE);
 }
 
 

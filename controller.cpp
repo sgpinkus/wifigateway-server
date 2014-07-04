@@ -118,6 +118,8 @@ int Controller::startSession(QString IP)
     else
     {
       session->state = Controller::STARTED;
+      session->activityTimeRemaining = Controller::ACTIVITY_TIME;
+      session->updateTimeRemaining = Controller::UPDATE_TIME;
     }
   }
   return success;
@@ -186,12 +188,7 @@ int Controller::playSession(QString IP)
   if(session->state == Controller::PAUSED)
   {
     success = startSession(IP);
-    if(success == 0)
-    {
-      session->activityTimeRemaining = Controller::ACTIVITY_TIME;
-      session->updateTimeRemaining = Controller::UPDATE_TIME;
-    }
-    else
+    if(!success)
     {
       qDebug() << "Failed IPTables rule add " << success << buf;
     }
@@ -274,13 +271,15 @@ int Controller::exhaustSession(Session * session)
 
 
 /**
- * @brief Controller::isExhausted
+ * Controller::isExhausted.
  * @return whether session is exhausted.
  */
 bool Controller::isExhausted(Session * session)
 {
-  bool exhausted = false;
+  qDebug() << __FILE__ << __func__;
   Q_ASSERT(session);
+
+  bool exhausted = false;
   if(session->timeRemaining == 0)
   {
     exhausted = true;
@@ -324,7 +323,7 @@ int Controller::updateQuotaRemaining(QString IP)
   Session * session = sessions.value(IP);
   if(session)
   {
-    session->quotaRemaining = (session->quotaRemaining > 0 ? session->quotaRemaining - 1 : 0);
+    session->quotaRemaining = (session->quotaRemaining > 0 ? session->quotaRemaining - 1 : session->quotaRemaining);
     success = 0;
     qDebug() << "Quota updated OK" << session->quotaRemaining;
   }
@@ -348,7 +347,7 @@ void Controller::tick()
     {
       case Controller::STARTED :
       {
-        session->timeRemaining = (session->timeRemaining > 0 ? session->timeRemaining - 1 : 0);
+        session->timeRemaining = (session->timeRemaining > 0 ? session->timeRemaining - 1 : session->timeRemaining);
         session->updateTimeRemaining = (session->updateTimeRemaining > 0 ? session->updateTimeRemaining - 1 : 0);
         // not implmented yet.
         // session->activityTimeRemaining = (session->activityTimeRemaining > 0 ? session->activityTimeRemaining - 1 : 0);
@@ -399,9 +398,11 @@ void Controller::tick()
         {
           endSession(session->IP);
         }
+        break;
       }
       case Controller::PAUSED :
       {
+        qDebug() << "In paused";
         session->pauseTimeRemaining = (session->pauseTimeRemaining > 0 ? session->pauseTimeRemaining - 1 : 0);
         if(session->pauseTimeRemaining == 0)
         {

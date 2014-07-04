@@ -104,6 +104,11 @@ int ControllerDBusAdaptor::newSession(QString IP)
   return controller->newSession(IP);
 }
 
+int ControllerDBusAdaptor::startSession(QString IP)
+{
+  return controller->startSession(IP);
+}
+
 int ControllerDBusAdaptor::pauseSession(QString IP)
 {
   return controller->pauseSession(IP);

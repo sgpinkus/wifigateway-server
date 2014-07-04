@@ -17,7 +17,7 @@ QUOTA_LOG_PREFIX="GW_SESSION_1MB_HACK"
 
 function error()
 {
-  echo "An error occured: $1"
+  echo "ERROR: $1"
   exit 1;
 }
 
@@ -94,7 +94,7 @@ function gw_set_iptables_input_firewall()
   # NFS! What port will satisfy you?!
   iptables -A gw_firewall --src ${NETWORK}/${NETMASK} -j ACCEPT
   iptables -A gw_firewall -j DROP
-  iptables -A INPUT -j gw_firewall 
+  iptables -A INPUT -j gw_firewall
 }
 
 
@@ -117,7 +117,7 @@ function gw_init()
   iptables -t nat -N gw_nat_prerouting
   iptables -t filter -N gw_filter_forward
   iptables -t nat -N gw_nat_postrouting
-  
+
   iptables -t mangle -N gw_hosts_allowed
   iptables -t filter -N gw_hosts_bandwidth
   iptables -t filter -N gw_hosts_quota

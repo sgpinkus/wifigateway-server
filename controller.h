@@ -17,7 +17,7 @@ public:
   explicit Controller(QSettings& settings, QObject *parent = 0);
   ~Controller();
   const static quint32 DEFAULT_BANDWIDTH = 1000;
-  const static qint32 DEFAULT_QUOTA = 500;
+  const static qint32 DEFAULT_QUOTA = -1;
   const static qint32 DEFAULT_TIME = -1;
   const static quint32 ACTIVITY_TIME = 60;
   const static quint32 UPDATE_TIME = 60;
