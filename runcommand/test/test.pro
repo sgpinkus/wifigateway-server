@@ -5,7 +5,7 @@
 }
 QT += testlib
 QT -= gui
-CONFIG += qtestlib debug
+CONFIG += qtestlib debug testcase
 TEMPLATE = app
 TARGET = 
 DEPENDPATH += . .. ..

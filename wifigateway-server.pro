@@ -9,3 +9,11 @@ TEMPLATE = subdirs
 SUBDIRS += filewatcher \
   runcommand \
   gateway.pro
+
+test.target = test
+test.commands += make -C runcommand/test/ check;
+test.commands += make -C filewatcher/test/ check;
+test.commands += make -C test/ check;
+test.commands += run-parts script/test/ --regex=".*testscript.*"
+test.depends = .test_dummy
+QMAKE_EXTRA_TARGETS += test .test_dummy

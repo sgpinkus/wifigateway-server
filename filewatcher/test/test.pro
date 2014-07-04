@@ -6,7 +6,7 @@
 QT += testlib
 QT -= gui
 CXXFLAGS += -std=c++11
-CONFIG += qtestlib debug
+CONFIG += qtestlib debug testcase
 TEMPLATE = app
 TARGET = 
 DEPENDPATH += . .. ..

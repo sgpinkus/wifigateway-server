@@ -1,5 +1,6 @@
 #!/bin/bash
-
+cd `dirname $0`
+cd ..
 TESTNET=10.1.3.
 PASS=0
 FAIL=0

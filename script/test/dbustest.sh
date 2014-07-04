@@ -1,4 +1,5 @@
 #!/bin/bash
+cd `dirname $0`
 DBUS_SERVICE="com.epicmorsel.dbus"
 DBUS_INTERFACE="com.epicmorsel.dbus.gateway"
 DBUS_OBJECT_PATH="/com/epicmorsel/dbus/gateway"
