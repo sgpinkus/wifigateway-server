@@ -185,7 +185,7 @@ int Controller::playSession(QString IP)
   {
     success = 0;
   }
-  if(session->state == Controller::PAUSED)
+  else if(session->state == Controller::PAUSED)
   {
     success = startSession(IP);
     if(!success)
@@ -276,7 +276,6 @@ int Controller::exhaustSession(Session * session)
  */
 bool Controller::isExhausted(Session * session)
 {
-  qDebug() << __FILE__ << __func__;
   Q_ASSERT(session);
 
   bool exhausted = false;
@@ -402,7 +401,6 @@ void Controller::tick()
       }
       case Controller::PAUSED :
       {
-        qDebug() << "In paused";
         session->pauseTimeRemaining = (session->pauseTimeRemaining > 0 ? session->pauseTimeRemaining - 1 : 0);
         if(session->pauseTimeRemaining == 0)
         {
