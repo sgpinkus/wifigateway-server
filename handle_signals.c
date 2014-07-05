@@ -13,7 +13,7 @@
 
 // Pointer to client callback function for handled signals.
 // The handled signals are always terminal.
-static void (*cleanup)() = NULL;
+static int (*cleanup)(int) = NULL;
 
 // Most sigs.
 struct sig_to_string {
@@ -48,41 +48,46 @@ struct sig_to_string {
   {SIGPOLL, "SIGPOLL", 7},
   {SIGTRAP, "SIGTRAP", 7},
   {SIGURG, "SIGURG", 6},
-  { 0, NULL, 0}
+  { 0, NULL}
 };
 
 
 /**
- * Generic signal handler.
- * @input signal number.
+ * Default handler.
  */
 static void handler(int signum)
 {
-  write(STDERR_FILENO, "Terminal signal (", 17);
   int i = 0;
-  for (i = 0; sigmap[i].sig > 0; i++) {
+  int cont = 0;
+
+  write(STDERR_FILENO, "Terminal signal (", 17);
+  for(i = 0; sigmap[i].sig > 0; i++)
+  {
     if (sigmap[i].sig == signum) {
       write(STDERR_FILENO, sigmap[i].str, sigmap[i].len);
       break;
     }
   }
-  write(STDERR_FILENO, "). Exiting.\n", 12);
+  write(STDERR_FILENO, ").\n", 3);
 
-  if (cleanup != NULL)
+  if(cleanup != NULL)
   {
-    cleanup();
+    cont = cleanup(signum);
   }
-
-  exit(EXIT_FAILURE);
+  if(!cont)
+  {
+    //kill(0, SIGINT);
+    exit(EXIT_FAILURE);
+  }
 }
 
 
 /**
- * Setup generic signal handling
+ * Setup generic signal handling. This is just a convenience.
  * @input option pointer to a user defined clean up function.
  * @returns 0 on success -1 on error
  */
-extern bool handle_signals(void (*cleanup_in)())
+extern bool handle_signals(int (*cleanup_in)(int))
 {
   sigset_t set;
   cleanup = cleanup_in;

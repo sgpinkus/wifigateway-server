@@ -10,10 +10,20 @@ SUBDIRS += filewatcher \
   runcommand \
   gateway.pro
 
+target.path = /usr/local/bin/
+target.files += wifigateway-server
+script_install.path = /usr/local/bin/wifigateway-script/
+script_install.files += wifigateway-script/*.sh
+script_install.files += wifigateway-script/*.php
+etc_install.path = /etc/
+etc_install.files = conf/*
+INSTALLS += target script_install
+
+
 test.target = test
 test.commands += make -C runcommand/test/ check;
 test.commands += make -C filewatcher/test/ check;
 test.commands += make -C test/ check;
-test.commands += run-parts script/test/ --regex=".*testscript.*"
+test.commands += run-parts wifigateway-script/test/ --regex=".*testscript.*"
 test.depends = .test_dummy
 QMAKE_EXTRA_TARGETS += test .test_dummy

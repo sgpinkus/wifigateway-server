@@ -60,6 +60,7 @@ public slots:
   QList <Session> getAllSessions();
   QStringList getIPs();
   void tick();
+  void cleanup();
 
 private:
   RunCommand runcommand;
@@ -75,9 +76,6 @@ private:
   void removeSession(Session * session);
   void dumpSession(Session * session);
   void clearSessions();
-
-private slots:
-  void cleanup();
 
 signals:
   void timeWarning();

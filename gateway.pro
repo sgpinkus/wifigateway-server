@@ -10,6 +10,7 @@
 
 QT       += core dbus
 QT       -= gui
+MAKEFILE = Makefile.gateway
 TEMPLATE = app
 TARGET = wifigateway-server
 CONFIG   += console
@@ -38,10 +39,7 @@ SOURCES += controller.cpp \
     gatewaycoreapplication.cpp
 
 OTHER_FILES += \
-    filewatcher/ \
-    runcommand/ \
-    script/gw_remove_host.sh \
-    script/gw_init.sh \
-    script/gw_functions.sh \
-    script/gw_add_host.sh \
+    filewatcher/* \
+    runcommand/* \
+    wifigateway-script/* \
     wifigateway-server.pro
