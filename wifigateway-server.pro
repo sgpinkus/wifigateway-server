@@ -20,8 +20,12 @@ scripts.path = $${bindir}/wifigateway-script/
 scripts.files += wifigateway-script/*.sh
 scripts.files += wifigateway-script/*.php
 etc.path = /etc/
-etc.files = conf/*
-INSTALLS += target scripts etc
+etc.files = conf/wifigateway/
+dbus.path = /etc/dbus-1/system.d/
+dbus.files += conf/dbus-1/system.d/wifigateway-server.conf
+init.path = /etc/init.d/
+init.files += conf/init.d/wifigateway-server.sh
+INSTALLS += target scripts etc dbus init
 message(Script files: $${scripts.files})
 message(Etc files: $${etc.files})
 
