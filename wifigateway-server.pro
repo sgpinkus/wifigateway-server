@@ -10,15 +10,20 @@ SUBDIRS += filewatcher \
   runcommand \
   gateway.pro
 
-target.path = /usr/local/bin/
-target.files += wifigateway-server
-script_install.path = /usr/local/bin/wifigateway-script/
-script_install.files += wifigateway-script/*.sh
-script_install.files += wifigateway-script/*.php
-etc_install.path = /etc/
-etc_install.files = conf/*
-INSTALLS += target script_install
+prefix=/usr/local/
+exec_prefix=$$prefix
+bindir=$${exec_prefix}/bin
 
+target.path = $$bindir
+target.files += wifigateway-server
+scripts.path = $${bindir}/wifigateway-script/
+scripts.files += wifigateway-script/*.sh
+scripts.files += wifigateway-script/*.php
+etc.path = /etc/
+etc.files = conf/*
+INSTALLS += target scripts etc
+message(Script files: $${scripts.files})
+message(Etc files: $${etc.files})
 
 test.target = test
 test.commands += make -C runcommand/test/ check;
