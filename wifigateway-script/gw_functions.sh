@@ -6,14 +6,14 @@
 IPTABLES=/sbin/iptables
 INBOUND_TCP_ALLOW="ssh,http,https,5900,5901,domain,111,2049"
 INBOUND_UDP_ALLOW="domain,111,2049,bootpc,bootps"
-# Swap for a wifi GW and setup AP.
-EXTIF="wlan0"
-INTIF="eth0"
-NETWORK=10.1.1.0
-NETMASK=24
 DEFAULT_BANDWIDTH=100  # Packets/s
 DEFAULT_QUOTA=500
 QUOTA_LOG_PREFIX="GW_SESSION_1MB_HACK"
+EXTIF=
+INTIF=
+NETWORK=
+NETMASK=
+
 
 function error()
 {
@@ -92,7 +92,7 @@ function gw_set_iptables_input_firewall()
   [[ -n ${INBOUND_TCP_ALLOW} ]] && iptables -A gw_firewall -p tcp -m multiport --destination-port ${INBOUND_TCP_ALLOW} -j ACCEPT
   [[ -n ${INBOUND_UDP_ALLOW} ]] && iptables -A gw_firewall -p udp -m multiport --destination-port ${INBOUND_UDP_ALLOW} -j ACCEPT
   # NFS! What port will satisfy you?!
-  iptables -A gw_firewall --src ${NETWORK}/${NETMASK} -j ACCEPT
+  #iptables -A gw_firewall --src ${NETWORK}/${NETMASK} -j ACCEPT
   iptables -A gw_firewall -j DROP
   iptables -A INPUT -j gw_firewall
 }
@@ -128,7 +128,7 @@ function gw_init()
   iptables -t nat -I PREROUTING -j gw_nat_prerouting
   iptables -t nat -A gw_nat_prerouting -p udp --dport 53 -m mark ! --mark 1/1 -j LOG
   iptables -t nat -A gw_nat_prerouting -p udp --dport 53 -m mark ! --mark 1/1 -j REDIRECT
-  iptables -t nat -A gw_nat_prerouting -p tcp -m multiport --dports 80,443 -m mark ! --mark 1/1 -j REDIRECT --to-port 80
+  iptables -t nat -A gw_nat_prerouting -p tcp -m multiport --dports 80,443 -m mark ! --mark 1/1 -j REDIRECT
   # FORWARD
   # Pipe the packets that got here through the bw and quota chains. These update on a per host basis.
   iptables -t filter -I FORWARD -j gw_filter_forward

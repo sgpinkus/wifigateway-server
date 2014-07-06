@@ -28,7 +28,7 @@ while(true)
 {
   $method_names = array_keys($methods);
   $method_index = select($method_names, "Select the method you want to call");
-  
+
   if(isset($method_index) && isset($methods[$method_names[$method_index]]))
   {
     $method_name = $method_names[$method_index];
@@ -36,8 +36,8 @@ while(true)
     $args_scheme = $method->xpath(".//arg[@direction='in']");
     $args = read_args($args_scheme);
     $result = NULL;
-    
-    try 
+
+    try
     {
       $result = $dbus_object->__call($method_name, $args);
     }
@@ -46,12 +46,12 @@ while(true)
       print "ERROR: " . $e->getMessage();
       continue;
     }
-    
+
     print "Result:\n";
     // Result may be primitive, or structured type which is repd as DbusXXX object.
     if(is_object($result))
     {
-      Reflection::export(new ReflectionClass($result));
+      //Reflection::export(new ReflectionClass($result));
       var_dump($result->getData());
     }
     else
@@ -101,16 +101,16 @@ function read_args($n)
 function select(Array $options, $msg = "", $loop = false)
 {
   $stdin = fopen("php://stdin", "r");
-    
+
   print $msg.":\n";
-  
+
   foreach($options as $i => $o)
   {
     print "$i) $o\n";
   }
-  
+
   $response = trim(fread($stdin, 1024));
-  
+
   while(((! ctype_digit($response)) || ($response > (sizeof($options) -1))) && $loop)
   {
     print $loop."\n";
@@ -121,14 +121,14 @@ function select(Array $options, $msg = "", $loop = false)
     }
     $response = trim(fread($stdin, 1024));
   }
-  
+
   fclose($stdin);
-  
+
   if(ctype_digit($response))
   {
     return $response;
   }
-  
-  return null; 
+
+  return null;
 }
 
