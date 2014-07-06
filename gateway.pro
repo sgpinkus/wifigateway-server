@@ -41,4 +41,5 @@ OTHER_FILES += \
     filewatcher/* \
     runcommand/* \
     wifigateway-script/* \
-    wifigateway-server.pro
+    wifigateway-server.pro \
+    README.md
