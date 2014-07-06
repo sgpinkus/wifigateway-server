@@ -61,7 +61,9 @@ void sysLogMsgHandler(QtMsgType type, const char *msg)
 int main(int argc, char *argv[])
 {
   handle_signals(sig_clean_up);
+#ifndef TESTING
   qInstallMsgHandler(sysLogMsgHandler);
+#endif
   GatewayCoreApplication app(argc, argv);
 
   try

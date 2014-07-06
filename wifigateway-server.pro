@@ -24,10 +24,8 @@ etc.files = conf/wifigateway/
 dbus.path = /etc/dbus-1/system.d/
 dbus.files += conf/dbus-1/system.d/wifigateway-server.conf
 init.path = /etc/init.d/
-init.files += conf/init.d/wifigateway-server.sh
+init.files += conf/init.d/wifigatewaysrv
 INSTALLS += target scripts etc dbus init
-message(Script files: $${scripts.files})
-message(Etc files: $${etc.files})
 
 test.target = test
 test.commands += make -C runcommand/test/ check;

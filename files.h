@@ -1,4 +1,12 @@
 #ifndef FILES_H
 #define FILES_H
-#define CONFIG_FILE "/etc/wifigateway/server.ini"
+
+#ifdef TESTING
+  #define CONFIG_FILE "./conf/wifigateway/server.ini"
+  #define WIFI_GW_SCRIPT_DIR "./"
+#else
+  #define CONFIG_FILE "/etc/wifigateway/server.ini"
+  #define WIFI_GW_SCRIPT_DIR "/usr/local/bin/"
+#endif
+
 #endif // FILES_H

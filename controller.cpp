@@ -1,4 +1,5 @@
 #include <stdexcept>
+#include "files.h"
 #include "controller.h"
 
 /**
@@ -23,7 +24,7 @@ Controller::Controller(QSettings& settings, QObject *parent) : QObject(parent),
   }
 
   // script inits firewall and chain(s) assumed by add, rem, etc.
-  QString cmd = QDir::current().path() + "/wifigateway-script/gw_init.sh EXTIF=%1 INTIF=%2";
+  QString cmd = QString(WIFI_GW_SCRIPT_DIR) + "/wifigateway-script/gw_init.sh EXTIF=%1 INTIF=%2";
   success = runcommand.runCommandExec(cmd.arg(extIf).arg(intIf), buf, 2000);
   if(success != 0)
   {
@@ -51,7 +52,7 @@ void Controller::cleanup()
 {
   qDebug() << __FILE__ << __func__;
   QString buf;
-  QString cmd = QDir::current().path() + "/wifigateway-script/gw_clean_up.sh";
+  QString cmd = QString(WIFI_GW_SCRIPT_DIR) + "/wifigateway-script/gw_clean_up.sh";
   runcommand.runCommandExec(cmd, buf, 2000);
   clearSessions();
 }
@@ -102,7 +103,7 @@ int Controller::startSession(QString IP)
   else if(!isExhausted(session))
   {
     QString buf;
-    QString cmd = QDir::current().path()
+    QString cmd = QString(WIFI_GW_SCRIPT_DIR)
                   + "/wifigateway-script/gw_add_host.sh "
                   + IP + " "
                   + QString::number(session->bandwidth) + " "
@@ -149,7 +150,7 @@ int Controller::pauseSession(QString IP)
   }
   else if(session->state == Controller::STARTED)
   {
-    QString cmd = QDir::current().path() + "/wifigateway-script/gw_remove_host.sh " + IP;
+    QString cmd = QString(WIFI_GW_SCRIPT_DIR) + "/wifigateway-script/gw_remove_host.sh " + IP;
     success = runcommand.runCommandExec(cmd, buf, 2000);
     if(success == 0)
     {
@@ -220,7 +221,7 @@ int Controller::endSession(QString IP)
   }
   else
   {
-    QString cmd = QDir::current().path() + "/wifigateway-script/gw_remove_host.sh " + IP;
+    QString cmd = QString(WIFI_GW_SCRIPT_DIR) + "/wifigateway-script/gw_remove_host.sh " + IP;
     success = runcommand.runCommandExec(cmd, buf, 2000);
     if(success == 0)
     {
@@ -255,7 +256,7 @@ int Controller::exhaustSession(Session * session)
   }
   else
   {
-    QString cmd = QDir::current().path() + "/wifigateway-script/gw_remove_host.sh " + session->IP;
+    QString cmd = QString(WIFI_GW_SCRIPT_DIR) + "/wifigateway-script/gw_remove_host.sh " + session->IP;
     success = runcommand.runCommandExec(cmd, buf, 2000);
     if(success == 0)
     {

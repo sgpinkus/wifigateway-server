@@ -1,3 +1,7 @@
+#DEFINES += TESTING
+#CONFIG -= debug
+!CONFIG(debug):DEFINES += QT_NO_DEBUG_OUTPUT
+
 win32 {
   MOC_DIR = _moc
   UI_DIR =  _ui
@@ -8,9 +12,9 @@ win32 {
   OBJECTS_DIR = .obj
 }
 
-app { 
+app {
   DESTDIR = $$OUTDIR
-  mac { 
+  mac {
     CONFIG -= app_bundle
   }
   win32 {
