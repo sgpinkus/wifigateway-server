@@ -11,7 +11,7 @@
 #                    <...>
 ### END INIT INFO
 
-# Author: sam <sam@localdomain>
+# Author: sam <sam@localhost>
 
 # PATH should only include /usr/* if it runs after the mountnfs.sh script
 PATH=/sbin:/usr/sbin:/bin:/usr/bin

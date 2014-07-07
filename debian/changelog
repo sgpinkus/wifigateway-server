@@ -2,4 +2,4 @@ wifigateway-server (0.1-1) unstable; urgency=low
 
   * Initial release (Closes: #nnnn)  <nnnn is the bug number of your ITP>
 
- -- sam <sam@localdomain>  Mon, 07 Jul 2014 12:06:43 +1000
+ -- sam <sam@localhost>  Mon, 07 Jul 2014 13:02:11 +1000

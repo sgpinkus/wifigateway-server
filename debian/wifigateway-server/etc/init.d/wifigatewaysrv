@@ -10,7 +10,7 @@
 
 # Name has to be <= 15 char. Not using it.
 PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin:/home/sam/Projects/wifigateway-server
-DAEMON=/usr/local/bin/wifigateway-server
+DAEMON=/usr/bin/wifigateway-server
 NAME=wifigateway-server
 #USER=root
 DESC="Wifi Gateway Server"

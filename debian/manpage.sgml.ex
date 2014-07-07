@@ -24,7 +24,7 @@ manpage.1: manpage.sgml
   <!-- SECTION should be 1-8, maybe w/ subsection other parameters are
        allowed: see man(7), man(1). -->
   <!ENTITY dhsection   "<manvolnum>SECTION</manvolnum>">
-  <!ENTITY dhemail     "<email>sam@localdomain</email>">
+  <!ENTITY dhemail     "<email>sam@localhost</email>">
   <!ENTITY dhusername  "sam">
   <!ENTITY dhucpackage "<refentrytitle>WIFIGATEWAY-SERVER</refentrytitle>">
   <!ENTITY dhpackage   "wifigateway-server">

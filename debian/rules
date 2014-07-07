@@ -11,7 +11,3 @@
 
 %:
 	dh $@  --with autotools-dev
-	
-override_dh_auto_configure:
-	./configure
-	qmake -makefile -nocache QMAKE_STRIP=: PREFIX=/usr
