@@ -1,5 +1,5 @@
 #DEFINES += TESTING
-#CONFIG -= debug
+CONFIG -= debug
 !CONFIG(debug):DEFINES += QT_NO_DEBUG_OUTPUT
 
 win32 {

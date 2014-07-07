@@ -42,4 +42,7 @@ OTHER_FILES += \
     runcommand/* \
     wifigateway-script/* \
     wifigateway-server.pro \
-    README.md
+    README.md \
+    conf/hostapd.conf \
+    conf/dnsmasq.conf \
+    conf/interfaces

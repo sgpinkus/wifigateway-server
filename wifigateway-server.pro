@@ -13,6 +13,7 @@ SUBDIRS += filewatcher \
 isEmpty(PREFIX):error(PREFIX is empty)
 EXEC_PREFIX=$$PREFIX
 BINDIR=$${EXEC_PREFIX}/bin
+DATAROOTDIR=$${PREFIX}/share
 INSTALL_ROOT=$$(DESTDIR)
 INSTALLS += target xyz
 
@@ -27,7 +28,9 @@ dbus.path = /etc/dbus-1/system.d/
 dbus.files += conf/dbus-1/system.d/wifigateway-server.conf
 init.path = /etc/init.d/
 init.files += conf/init.d/wifigatewaysrv
-INSTALLS += target scripts etc dbus init
+docs.path = $${DATAROOTDIR}/wifigateway/
+docs.files += conf/dnsmasq.conf conf/hostapd.conf conf/network/ conf/default
+INSTALLS += target scripts etc dbus init docs
 
 test.target = test
 test.commands += make -C runcommand/test/ check;

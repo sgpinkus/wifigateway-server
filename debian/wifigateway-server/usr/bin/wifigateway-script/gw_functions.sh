@@ -14,15 +14,13 @@ INTIF=
 NETWORK=
 NETMASK=
 
-
 function error()
 {
   echo "ERROR: $1"
   exit 1;
 }
 
-
-# Surely there is a "make everything f off!" command! Yeah `reboot`.
+# Surely there is a make everything go away command? Yeah `reboot`.
 # Dont use this.
 function gw_set_iptables_default_policy()
 {
@@ -44,8 +42,8 @@ function gw_set_iptables_default_policy()
   iptables -Z
 }
 
-
 # Reset ip-tables. Don't use this.
+#
 function gw_restore()
 {
   iptables -t mangle -F
@@ -58,13 +56,11 @@ function gw_restore()
   iptables -t raw -X
 }
 
-
 function gw_reset_iptables()
 {
   gw_restore
   gw_set_iptables_default_policy
 }
-
 
 function gw_check_mod()
 {
@@ -73,9 +69,9 @@ function gw_check_mod()
   modprobe ip_conntrack || error "No iptables conntrack loaded"
 }
 
-
 # Basic firewall for the gateway server itself. Nothing to do with actual gateway.
 # Dont use this.
+#
 function gw_set_iptables_input_firewall()
 {
   iptables -t filter -N gw_firewall
@@ -91,12 +87,9 @@ function gw_set_iptables_input_firewall()
   # iptables -A INPUT -p tcp -m state --state NEW -m tcp --dport 22 -j ACCEPT
   [[ -n ${INBOUND_TCP_ALLOW} ]] && iptables -A gw_firewall -p tcp -m multiport --destination-port ${INBOUND_TCP_ALLOW} -j ACCEPT
   [[ -n ${INBOUND_UDP_ALLOW} ]] && iptables -A gw_firewall -p udp -m multiport --destination-port ${INBOUND_UDP_ALLOW} -j ACCEPT
-  # NFS! What port will satisfy you?!
-  #iptables -A gw_firewall --src ${NETWORK}/${NETMASK} -j ACCEPT
   iptables -A gw_firewall -j DROP
   iptables -A INPUT -j gw_firewall
 }
-
 
 # Init iptables for this app.
 # Uses `mark` to mark, though connmark would be better, could not make it work together with marks I need for quota and bandwidth.
@@ -105,14 +98,15 @@ function gw_set_iptables_input_firewall()
 # Note mangle->PREROUTING -j ACCEPT means packets dont hit mangle->FORWARD! nat->PREROUTING -j ACCEPT does not have same behaviour.
 # @input EXTIF The interface connected to the outside
 # @input INTIF The interface clients are on.
+#
 function gw_init()
 {
   [[ -n "$@" ]] && export $@
   [[ -n "${EXTIF}" ]] || error "No external interface defined"
   [[ -n "${INTIF}" ]] || error "No internal interface defined"
-  gw_reset_iptables
+  [[ "${RESET_IPTABLES}" == "yes" ]] && gw_reset_iptables
   # INPUT F.W.
-  gw_set_iptables_input_firewall
+  [[ "${SET_DEFAULT_FIREWALL}" == "yes" ]] && gw_set_iptables_input_firewall
   # Init chains used to implement gateway.
   iptables -t nat -N gw_nat_prerouting
   iptables -t filter -N gw_filter_forward
@@ -142,8 +136,8 @@ function gw_init()
   #iptables -t filter -N gw_hosts_quota
 }
 
-
 # Flush then delete all our chains. Order ~important.
+#
 function gw_clean_up()
 {
   iptables -t mangle -D PREROUTING -j gw_hosts_allowed
@@ -162,7 +156,6 @@ function gw_clean_up()
   iptables -t filter -F gw_firewall 2>/dev/null
   iptables -t filter -X gw_firewall 2>/dev/null
 }
-
 
 # Add allow,bw,quota rules.
 # Have to use marking due to limits of iptables rules.
@@ -187,7 +180,6 @@ function gw_add_host()
   fi
 }
 
-
 # Remove host by ip address.
 #
 function gw_remove_host()
@@ -204,7 +196,6 @@ function gw_remove_host()
   fi
 }
 
-
 # Get host entry by ip address.
 #
 function gw_get_host_entry()
@@ -212,14 +203,12 @@ function gw_get_host_entry()
   iptables-save -t mangle | grep "^\-A gw_hosts_allowed" | grep "$1" -n -m 1 | cut -f1 -d":"
 }
 
-
 # Get host index by ip address.
 #
 function gw_get_host_entry_num()
 {
   iptables-save -t mangle | grep "^\-A gw_hosts_allowed" | grep "$1" -n -m 1 | cut -f1 -d":"
 }
-
 
 function gw_dump_hosts_allowed()
 {

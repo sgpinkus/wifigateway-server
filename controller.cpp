@@ -15,8 +15,9 @@ Controller::Controller(QSettings& settings, QObject *parent) : QObject(parent),
 {
   QString buf;
   int success;
-  QString extIf = settings.value("extif","").toString();
-  QString intIf = settings.value("intif","").toString();
+  QString extIf = settings.value("EXTIF","").toString();
+  QString intIf = settings.value("INTIF","").toString();
+  QString fW = settings.value("SET_DEFAULT_FIREWALL","").toString();
 
   if(!extIf.length() || !intIf.length())
   {
@@ -24,8 +25,8 @@ Controller::Controller(QSettings& settings, QObject *parent) : QObject(parent),
   }
 
   // script inits firewall and chain(s) assumed by add, rem, etc.
-  QString cmd = QString(WIFI_GW_SCRIPT_DIR) + "/wifigateway-script/gw_init.sh EXTIF=%1 INTIF=%2";
-  success = runcommand.runCommandExec(cmd.arg(extIf).arg(intIf), buf, 2000);
+  QString cmd = QString(WIFI_GW_SCRIPT_DIR) + "/wifigateway-script/gw_init.sh EXTIF=%1 INTIF=%2 SET_DEFAULT_FIREWALL=%3";
+  success = runcommand.runCommandExec(cmd.arg(extIf).arg(intIf).arg(fW), buf, 2000);
   if(success != 0)
   {
     throw std::runtime_error(QString("Failed initializing IPTables rules: %1; %2").arg(success).arg(buf).toAscii().data());

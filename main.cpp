@@ -19,7 +19,7 @@ int sig_clean_up(int signum)
   int cont = 0;
   if(signum == SIGBUS || signum == SIGFPE || signum == SIGILL|| signum == SIGSEGV)
   {
-    write(STDERR_FILENO, "Abnormal Termination.\n", 21);
+    write(STDERR_FILENO, "Abnormal Termination.\n", 22);
   }
   if(qApp)
   {
