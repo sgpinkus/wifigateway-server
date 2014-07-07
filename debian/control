@@ -1,0 +1,15 @@
+Source: wifigateway-server
+Section: unknown
+Priority: extra
+Maintainer: sam <sam@localdomain>
+Build-Depends: debhelper (>= 8.0.0), autotools-dev
+Standards-Version: 3.9.3
+Homepage: <insert the upstream URL, if relevant>
+#Vcs-Git: git://git.debian.org/collab-maint/wifigateway-server.git
+#Vcs-Browser: http://git.debian.org/?p=collab-maint/wifigateway-server.git;a=summary
+
+Package: wifigateway-server
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: <insert up to 60 chars description>
+ <insert long description, indented with spaces>

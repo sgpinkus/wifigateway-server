@@ -10,13 +10,15 @@ SUBDIRS += filewatcher \
   runcommand \
   gateway.pro
 
-prefix=/usr/local/
-exec_prefix=$$prefix
-bindir=$${exec_prefix}/bin
+isEmpty(PREFIX):error(PREFIX is empty)
+EXEC_PREFIX=$$PREFIX
+BINDIR=$${EXEC_PREFIX}/bin
+INSTALL_ROOT=$$(DESTDIR)
+INSTALLS += target xyz
 
-target.path = $$bindir
+target.path = $$BINDIR
 target.files += wifigateway-server
-scripts.path = $${bindir}/wifigateway-script/
+scripts.path = $${BINDIR}/wifigateway-script/
 scripts.files += wifigateway-script/*.sh
 scripts.files += wifigateway-script/*.php
 etc.path = /etc/

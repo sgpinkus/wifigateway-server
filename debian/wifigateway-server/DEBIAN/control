@@ -1,0 +1,11 @@
+Package: wifigateway-server
+Version: 0.1-1
+Architecture: amd64
+Maintainer: sam <sam@localdomain>
+Installed-Size: 186
+Depends: libc6 (>= 2.2.5), libgcc1 (>= 1:4.1.1), libqt4-dbus (>= 4:4.5.3), libqtcore4 (>= 4:4.8.0), libstdc++6 (>= 4.1.1)
+Section: unknown
+Priority: extra
+Homepage: <insert the upstream URL, if relevant>
+Description: <insert up to 60 chars description>
+ <insert long description, indented with spaces>

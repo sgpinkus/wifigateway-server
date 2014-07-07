@@ -6,7 +6,7 @@
   #define WIFI_GW_SCRIPT_DIR "./"
 #else
   #define CONFIG_FILE "/etc/wifigateway/server.ini"
-  #define WIFI_GW_SCRIPT_DIR "/usr/local/bin/"
+  #define WIFI_GW_SCRIPT_DIR "@prefix@/bin/"
 #endif
 
 #endif // FILES_H

@@ -1,0 +1,14 @@
+83f2082c9967ebde89705a72730cb9f3  usr/bin/wifigateway-script/DbusIntrospectableObject.php
+698d30e39ad40b673ec7fbaab6282991  usr/bin/wifigateway-script/gw_add_host.sh
+ff3c2b086060e006466a9fe471fd1292  usr/bin/wifigateway-script/gw_clean_up.sh
+a728ac022200f8193ca2e3f0f847bb7c  usr/bin/wifigateway-script/gw_console.php
+85116b63d44ffe789ee75beb8fa3a633  usr/bin/wifigateway-script/gw_fifo_if.sh
+ca22cff5c3a7c09829208c755f20f318  usr/bin/wifigateway-script/gw_functions.sh
+d6a04690755e2b428ded9ae27d8c227a  usr/bin/wifigateway-script/gw_init.sh
+3c439048ea29465d543fe5d1dadb9c3a  usr/bin/wifigateway-script/gw_remove_host.sh
+10f7aeb1732231adefdc502bf5057e5c  usr/bin/wifigateway-script/gw_reset_iptables.sh
+b4f4c81da3e5922f005ac9d9ecdde040  usr/bin/wifigateway-server
+391ee254875c80d9b09cf6f1ae670b2a  usr/share/doc/wifigateway-server/README.Debian
+07787cd00b4e53cd78957cd1848eeaee  usr/share/doc/wifigateway-server/README.md
+d26dea2f73b9216e9ef81c9df2c40a27  usr/share/doc/wifigateway-server/changelog.Debian.gz
+d9c276f3adf61760d0ce6620db56114e  usr/share/doc/wifigateway-server/copyright
