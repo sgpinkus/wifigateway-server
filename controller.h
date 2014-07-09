@@ -52,6 +52,7 @@ public slots:
   int playSession(QString IP);
   int updateSession(QString IP);
   int endSession(QString IP);
+  int deleteSession(QString IP);
   int setBandwidth(QString IP, quint32 bw);
   int setQuota(QString IP, qint32 quota);
   int setTime(QString IP, qint32 time);

@@ -108,9 +108,9 @@ function gw_init()
   # INPUT F.W.
   [[ "${SET_DEFAULT_FIREWALL}" == "yes" ]] && gw_set_iptables_input_firewall
   # Init chains used to implement gateway.
-  iptables -t nat -N gw_nat_prerouting
+  iptables -t nat    -N gw_nat_prerouting
   iptables -t filter -N gw_filter_forward
-  iptables -t nat -N gw_nat_postrouting
+  iptables -t nat    -N gw_nat_postrouting
 
   iptables -t mangle -N gw_hosts_allowed
   iptables -t filter -N gw_hosts_bandwidth
@@ -136,22 +136,26 @@ function gw_init()
   #iptables -t filter -N gw_hosts_quota
 }
 
-# Flush then delete all our chains. Order ~important.
-#
+# Flush then delete all our chains. Order important.
+# To delete a chain it must be mpety and unreferenced.
 function gw_clean_up()
 {
   iptables -t mangle -D PREROUTING -j gw_hosts_allowed
-  iptables -t nat -D PREROUTING -j gw_nat_prerouting
+  iptables -t nat    -D PREROUTING -j gw_nat_prerouting
   iptables -t filter -D FORWARD -j gw_filter_forward
-  iptables -t nat -D POSTROUTING -j gw_nat_postrouting
-  iptables -t mangle -F gw_hosts_allowed
-  iptables -t nat -F gw_nat_prerouting
+  iptables -t nat    -D POSTROUTING -j gw_nat_postrouting
+  iptables -t nat    -F gw_nat_prerouting
   iptables -t filter -F gw_filter_forward
-  iptables -t nat -F gw_nat_postrouting
-  iptables -t mangle -X gw_hosts_allowed
-  iptables -t nat -X gw_nat_prerouting
+  iptables -t nat    -F gw_nat_postrouting
+  iptables -t mangle -F gw_hosts_allowed
+  iptables -t filter -F gw_hosts_bandwidth
+  iptables -t filter -F gw_hosts_quota
+  iptables -t nat    -X gw_nat_prerouting
   iptables -t filter -X gw_filter_forward
-  iptables -t nat -X gw_nat_postrouting
+  iptables -t nat    -X gw_nat_postrouting
+  iptables -t mangle -X gw_hosts_allowed
+  iptables -t filter -X gw_hosts_bandwidth
+  iptables -t filter -X gw_hosts_quota
   iptables -t filter -D INPUT -j gw_firewall 2>/dev/null
   iptables -t filter -F gw_firewall 2>/dev/null
   iptables -t filter -X gw_firewall 2>/dev/null

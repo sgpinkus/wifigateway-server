@@ -124,6 +124,11 @@ int ControllerDBusAdaptor::endSession(QString IP)
   return controller->endSession(IP);
 }
 
+int ControllerDBusAdaptor::deleteSession(QString IP)
+{
+  return controller->deleteSession(IP);
+}
+
 int ControllerDBusAdaptor::updateSession(QString IP)
 {
   return controller->updateSession(IP);

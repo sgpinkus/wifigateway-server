@@ -26,7 +26,7 @@ Controller::Controller(QSettings& settings, QObject *parent) : QObject(parent),
 
   // script inits firewall and chain(s) assumed by add, rem, etc.
   QString cmd = QString(WIFI_GW_SCRIPT_DIR) + "/wifigateway-script/gw_init.sh EXTIF=%1 INTIF=%2 SET_DEFAULT_FIREWALL=%3";
-  success = runcommand.runCommandExec(cmd.arg(extIf).arg(intIf).arg(fW), buf, 2000);
+  success = runcommand.runCommandExec(cmd.arg(extIf).arg(intIf).arg(fW), buf, 5000);
   if(success != 0)
   {
     throw std::runtime_error(QString("Failed initializing IPTables rules: %1; %2").arg(success).arg(buf).toAscii().data());
@@ -54,7 +54,7 @@ void Controller::cleanup()
   qDebug() << __FILE__ << __func__;
   QString buf;
   QString cmd = QString(WIFI_GW_SCRIPT_DIR) + "/wifigateway-script/gw_clean_up.sh";
-  runcommand.runCommandExec(cmd, buf, 2000);
+  runcommand.runCommandExec(cmd, buf, 5000);
   clearSessions();
 }
 
@@ -110,7 +110,7 @@ int Controller::startSession(QString IP)
                   + QString::number(session->bandwidth) + " "
                   + QString::number(session->quotaRemaining);
     qDebug() << cmd;
-    success = runcommand.runCommandExec(cmd, buf, 2000);
+    success = runcommand.runCommandExec(cmd, buf, 5000);
     qDebug() << buf;
 
     if(success != 0)
@@ -152,7 +152,7 @@ int Controller::pauseSession(QString IP)
   else if(session->state == Controller::STARTED)
   {
     QString cmd = QString(WIFI_GW_SCRIPT_DIR) + "/wifigateway-script/gw_remove_host.sh " + IP;
-    success = runcommand.runCommandExec(cmd, buf, 2000);
+    success = runcommand.runCommandExec(cmd, buf, 5000);
     if(success == 0)
     {
       session->state = Controller::PAUSED;
@@ -223,7 +223,7 @@ int Controller::endSession(QString IP)
   else
   {
     QString cmd = QString(WIFI_GW_SCRIPT_DIR) + "/wifigateway-script/gw_remove_host.sh " + IP;
-    success = runcommand.runCommandExec(cmd, buf, 2000);
+    success = runcommand.runCommandExec(cmd, buf, 5000);
     if(success == 0)
     {
       session->state = Controller::ENDED;
@@ -231,6 +231,35 @@ int Controller::endSession(QString IP)
     else
     {
       qDebug() << "Failed IPTables rule remove " << success << buf;
+    }
+  }
+  return success;
+}
+
+
+/**
+ * End the session.
+ * Preserve a record of it. This record will be thawed if a client matching ident attempt to connect later.
+ * @returns 0 on success, the result of IPTables add or -1 on other failure.
+ */
+int Controller::deleteSession(QString IP)
+{
+  qDebug() << __FILE__ << __func__;
+  QString buf;
+  int success = -1;
+
+  Session * session = sessions.value(IP);
+
+  if(!session)
+  {
+    success = -1;
+  }
+  else
+  {
+    success = endSession(IP);
+    if(success == 0)
+    {
+      removeSession(session);
     }
   }
   return success;
@@ -258,7 +287,7 @@ int Controller::exhaustSession(Session * session)
   else
   {
     QString cmd = QString(WIFI_GW_SCRIPT_DIR) + "/wifigateway-script/gw_remove_host.sh " + session->IP;
-    success = runcommand.runCommandExec(cmd, buf, 2000);
+    success = runcommand.runCommandExec(cmd, buf, 5000);
     if(success == 0)
     {
       session->state = Controller::EXHAUSTED;
@@ -342,7 +371,7 @@ void Controller::tick()
 
   foreach(Session * session, sessions)
   {
-    dumpSession(session);
+    qDebug() << session->IP << session->state;
 
     switch(session->state)
     {
@@ -575,7 +604,7 @@ void Controller::removeSession(Session * session)
 {
   qDebug() << __FILE__ << __func__;
   QString key = sessions.key(session);
-  if(key.length() == 0)
+  if(key.length() != 0)
   {
     sessions.remove(key);
     delete session;
