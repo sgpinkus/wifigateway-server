@@ -28,6 +28,9 @@ public:
   const static quint32 ACTIVITY_WARNING_TIME = 15;
   const static quint32 PAUSE_WARNING_TIME = 15;
   typedef enum { UNINITIALIZED, STARTED, PAUSED, EXHAUSTED, ENDED } SessionState;
+  quint32 defaultBandwidth = DEFAULT_BANDWIDTH;
+  quint32 defaultQuota = DEFAULT_QUOTA;
+  quint32 defaultTime = DEFAULT_TIME;
 
   // Main struct describing a session.
   typedef struct
@@ -56,6 +59,11 @@ public slots:
   int setBandwidth(QString IP, quint32 bw);
   int setQuota(QString IP, qint32 quota);
   int setTime(QString IP, qint32 time);
+  int setDefaultBandWidth(quint32 bw);
+  int setDefaultQuota(qint32 quota);
+  int setDefaultTime(qint32 time);
+  Session getDefaultSession();
+  int setDefaultSession(const Session& s);
   int updateQuotaRemaining(QString IP);
   Session getSession(QString IP);
   QList <Session> getAllSessions();

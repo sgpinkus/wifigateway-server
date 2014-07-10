@@ -17,7 +17,9 @@
 int sig_clean_up(int signum)
 {
   int cont = 0;
-  if(signum == SIGBUS || signum == SIGFPE || signum == SIGILL|| signum == SIGSEGV)
+  static int continued = 0;
+
+  if(signum == SIGBUS || signum == SIGFPE || signum == SIGILL || signum == SIGSEGV)
   {
     write(STDERR_FILENO, "Abnormal Termination.\n", 22);
   }
@@ -26,6 +28,11 @@ int sig_clean_up(int signum)
     qApp->quit();
     cont = 1;
   }
+  if(continued)
+  {
+    cont = 0;
+  }
+  continued = 1;
   return cont;
 }
 

@@ -166,3 +166,42 @@ int ControllerDBusAdaptor::setQuota(QString IP, qint32 quota)
 {
   return controller->setQuota(IP, quota);
 }
+
+int ControllerDBusAdaptor::setTime(QString IP, qint32 time)
+{
+  return controller->setQuota(IP, time);
+}
+
+int ControllerDBusAdaptor::setDefaultBandWidth(quint32 bw)
+{
+  return controller->setDefaultBandWidth(bw);
+}
+
+int ControllerDBusAdaptor::setDefaultQuota(qint32 quota)
+{
+  return controller->setDefaultQuota(quota);
+}
+
+int ControllerDBusAdaptor::setDefaultTime(qint32 time)
+{
+  return controller->setDefaultTime(time);
+}
+
+SessionExport ControllerDBusAdaptor::getDefaultSession()
+{
+  SessionExport retval;
+  Controller::Session s = controller->getDefaultSession();
+  retval.bandwidth = s.bandwidth;
+  retval.quotaRemaining = s.quotaRemaining;
+  retval.timeRemaining = s.timeRemaining;
+  return retval;
+}
+
+int ControllerDBusAdaptor::setDefaultSession(const SessionExport& s)
+{
+  Controller::Session new_s;
+  new_s.bandwidth = s.bandwidth;
+  new_s.quotaRemaining = s.quotaRemaining;
+  new_s.timeRemaining = s.timeRemaining;
+  return controller->setDefaultSession(new_s);
+}

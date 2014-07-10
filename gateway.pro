@@ -18,6 +18,7 @@ CONFIG   -= app_bundle
 INCLUDEPATH += .
 LIBS += -lruncommand -lfilewatcher -Lfilewatcher/ -Lruncommand/
 PRE_TARGETDEPS += runcommand/libruncommand.a filewatcher/libfilewatcher.a
+QMAKE_CXXFLAGS += -std=c++11
 
 # Input
 HEADERS += controller.h \

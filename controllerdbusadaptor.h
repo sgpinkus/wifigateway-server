@@ -32,6 +32,12 @@ public slots:
   int updateSession(QString IP);
   int setBandwidth(QString IP, qint32 bw);
   int setQuota(QString IP, qint32 quota);
+  int setTime(QString IP, qint32 time);
+  int setDefaultBandWidth(quint32 bw);
+  int setDefaultQuota(qint32 quota);
+  int setDefaultTime(qint32 time);
+  SessionExport getDefaultSession();
+  int setDefaultSession(const SessionExport& s);
   SessionExport getSession(QString IP);
   QStringList getIPs();
 

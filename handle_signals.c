@@ -48,7 +48,7 @@ struct sig_to_string {
   {SIGPOLL, "SIGPOLL", 7},
   {SIGTRAP, "SIGTRAP", 7},
   {SIGURG, "SIGURG", 6},
-  { 0, NULL}
+  { 0, NULL, 0}
 };
 
 
@@ -76,8 +76,8 @@ static void handler(int signum)
   }
   if(!cont)
   {
-    //kill(0, SIGINT);
-    exit(EXIT_FAILURE);
+    kill(0, SIGINT);
+    _exit(EXIT_FAILURE);
   }
 }
 

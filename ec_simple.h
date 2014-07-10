@@ -12,9 +12,8 @@ static const int ec_in_cleanup = 0;
 #define EC_CLEANUP_BGN\
   ec_cleanup_bgn:\
   {\
-    int ec_in_cleanup;\
-    ec_in_cleanup = 1;
-     
+    int ec_in_cleanup = 1;
+
   #define EC_CLEANUP_END\
   }
 

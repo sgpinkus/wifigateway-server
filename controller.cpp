@@ -461,23 +461,6 @@ void Controller::tick()
 }
 
 
-void Controller::initSession(Controller::Session * session, QString IP)
-{
-  qDebug() << __FILE__ << __func__;
-  session->state = Controller::UNINITIALIZED;
-  session->IP = IP;
-  session->MAC = QString();
-  session->bandwidth = Controller::DEFAULT_BANDWIDTH;
-  session->quotaRemaining = Controller::DEFAULT_QUOTA;
-  session->timeRemaining = Controller::DEFAULT_TIME;
-  session->activityTimeRemaining = Controller::ACTIVITY_TIME;
-  session->updateTimeRemaining = Controller::UPDATE_TIME;
-  session->pauseTimeRemaining = Controller::PAUSE_TIME;
-  session->endTimeRemaining = Controller::END_TIME;
-  session->sessionTime = 0;
-}
-
-
 /**
  * Set bandwidth. Pause/play is a hack to get it into IP tables.
  */
@@ -550,6 +533,64 @@ Controller::Session Controller::getSession(QString IP)
     retval.IP = IP;
   }
   return retval;
+}
+
+
+void Controller::initSession(Controller::Session * session, QString IP)
+{
+  qDebug() << __FILE__ << __func__;
+  session->state = Controller::UNINITIALIZED;
+  session->IP = IP;
+  session->MAC = QString();
+  session->bandwidth = defaultBandwidth;
+  session->quotaRemaining = defaultQuota;
+  session->timeRemaining = defaultTime;
+  session->activityTimeRemaining = Controller::ACTIVITY_TIME;
+  session->updateTimeRemaining = Controller::UPDATE_TIME;
+  session->pauseTimeRemaining = Controller::PAUSE_TIME;
+  session->endTimeRemaining = Controller::END_TIME;
+  session->sessionTime = 0;
+}
+
+
+int Controller::setDefaultBandWidth(quint32 bw)
+{
+  defaultBandwidth = bw;
+  return 0;
+}
+
+
+int Controller::setDefaultQuota(qint32 quota)
+{
+  defaultQuota = quota;
+  return 0;
+}
+
+
+int Controller::setDefaultTime(qint32 time)
+{
+  defaultTime = time;
+  return 0;
+}
+
+
+Controller::Session Controller::getDefaultSession(){
+  Session r;
+  initSession(&r, "");
+  return r;
+}
+
+
+/**
+ * Convenience to set some the defaults. May add more later.
+ * @todo Tempting to just rep all defaults in an object.
+ */
+int Controller::setDefaultSession(const Session &s)
+{
+  defaultBandwidth = s.bandwidth;
+  defaultQuota = s.quotaRemaining;
+  defaultTime = s.timeRemaining;
+  return 0;
 }
 
 

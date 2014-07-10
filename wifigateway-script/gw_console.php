@@ -67,7 +67,8 @@ while(true)
 
 
 /**
- *
+ * Read dbus type. Broken for non primitives - and signed types.
+ * @param $n array of dbus type specifers.
  */
 function read_args($n)
 {
@@ -79,18 +80,39 @@ function read_args($n)
     foreach($n as $arg)
     {
       $fmt_str .= $arg['name'] . ":" . $arg['type'] . " ";
-      $fmt .= "%" . $arg['type'] . " ";
+      $fmt .= "%" . dbus_to_printf($arg['type']."") . " ";
     }
     $fmt_str = trim($fmt_str);
     $fmt = trim($fmt);
-    $arg_fmt = str_repeat("%s ", sizeof($n));
-    printf("Enter args (%s):\n", $fmt_str, $fmt);
-    $args = fscanf(STDIN, $arg_fmt);
+    printf("Enter args (%s) (%s):\n", $fmt_str, $fmt);
+    $args = fscanf(STDIN, $fmt);
   }
   return $args;
 }
 
 
+/**
+ * Clearly inaccurate.
+ */
+function dbus_to_printf($s)
+{
+  $map = array(
+    "y" => "hhu",
+    "n" => "hi",
+    "q" => "hu",
+    "i" => "i",
+    "u" => "u",
+    "x" => "lli",
+    "t" => "llu",
+    "d" => "g",
+    "s" => "s",
+    "o" => "s",
+    "b" => "s",
+    "a" => "s",
+    "g" => "s"
+  );
+  return empty($map[$s]) ? "s" : $map[$s];
+}
 /**
  * Select one or a number of options from a list specified as an array.
  * @param $options an array with a numbered list of options which will be printed and user select one.
