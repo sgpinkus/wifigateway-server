@@ -19,6 +19,8 @@ set -e
 
 case "$1" in
     remove|upgrade|deconfigure)
+      service wifigatewaysrv stop
+      update-rc.d wifigatewaysrv remove
     ;;
 
     failed-upgrade)

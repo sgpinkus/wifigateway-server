@@ -20,6 +20,8 @@ set -e
 
 case "$1" in
     configure)
+      update-rc.d wifigatewaysrv defaults
+      service wifigatewaysrv start 
     ;;
 
     abort-upgrade|abort-remove|abort-deconfigure)

@@ -4,7 +4,7 @@
 # Required-Start:    $remote_fs $all
 # Required-Stop:
 # Default-Start:     2 3 4 5
-# Default-Stop:
+# Default-Stop:      0 1 6
 # Short-Description: Wifi Gateway Server
 ### END INIT INFO
 
@@ -21,7 +21,7 @@ DESC="Wifi Gateway Server"
 function _start()
 {
   log_daemon_msg "Starting $DESC" "$NAME "
-  start-stop-daemon --start --oknodo --background --exec $DAEMON -- $DAEMON_OPTS
+  start-stop-daemon --start --background --exec $DAEMON -- $DAEMON_OPTS
   log_end_msg $?
 }
 
@@ -29,7 +29,7 @@ function _start()
 function _stop()
 {
   log_daemon_msg "Stopping $DESC" "$NAME "
-  start-stop-daemon --stop --oknodo --exec $DAEMON
+  start-stop-daemon --stop --exec $DAEMON
   log_end_msg $?
 }
 
