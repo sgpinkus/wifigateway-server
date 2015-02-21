@@ -1,21 +1,35 @@
+#!/usr/bin/php
 <?php
+/**
+ * Create a proxy to a dbus object and calls methods on them interactively.
+ * No support for signals.
+ * ./shell.php org.freedesktop.ModemManager org.freedesktop.ModemManager /org/freedesktop/ModemManager
+ * ./shell.php com.epicmorsel.dbus com.epicmorsel.dbus.gateway /com/epicmorsel/dbus/gateway
+ * ./shell.php org.PulseAudio1 org.PulseAudio1.ServerLookup1 /org/pulsaudio/server_lookup1
+ * @todo nested argument support.
+ */ 
+ 
 require_once("DbusIntrospectableObject.php");
 
-#define("DBUS_NAME",  "com.epicmorsel.dbus");
-#define("DBUS_INTERFACE", "com.epicmorsel.dbus.gateway");
-#define("DBUS_OBJECT_PATH", "/com/epicmorsel/dbus/gateway");
-#define("DBUS_NAME",  "org.PulseAudio1");
-#define("DBUS_INTERFACE", "org.PulseAudio1.ServerLookup1");
-#define("DBUS_OBJECT_PATH", "/org/pulsaudio/server_lookup1");
-define("DBUS_NAME",  "com.epicmorsel.dbus");
-define("DBUS_INTERFACE", "com.epicmorsel.dbus.gateway");
-define("DBUS_OBJECT_PATH", "/com/epicmorsel/dbus/gateway");
+if($argc != 5 || !in_array($argv[1], array("system", "session"))) {
+  print usage();
+  exit(1);
+}
+
+function usage() {
+  global $argv;
+  return "Usage: {$argv[0]} (system|session) <busname> <interface> <object>\n";
+}
+$DbusAddress = $argv[1];
+$DbusName = $argv[2];
+$DbusInterface = $argv[3];
+$DbusObjectPath = $argv[4];
 
 try
 {
-  $dbus = new Dbus(Dbus::BUS_SYSTEM, true);
-  $dbus_object = $dbus->createProxy(DBUS_NAME, DBUS_OBJECT_PATH, DBUS_INTERFACE);
-  $dbus_i_obj = new DbusIntrospectableObject($dbus, DBUS_NAME, DBUS_OBJECT_PATH, DBUS_INTERFACE);
+  $dbus = ($DbusAddress == "system") ? new Dbus(Dbus::BUS_SYSTEM, true) : new Dbus(Dbus::BUS_SYSTEM, true);
+  $dbus_object = $dbus->createProxy($DbusName, $DbusObjectPath, $DbusInterface);
+  $dbus_i_obj = new DbusIntrospectableObject($dbus, $DbusName, $DbusObjectPath, $DbusInterface);
   $methods = $dbus_i_obj->_methods();
 }
 catch(Exception $e)
