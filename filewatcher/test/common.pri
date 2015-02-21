@@ -1,1 +1,1 @@
-../../common.pri
+../common.pri
