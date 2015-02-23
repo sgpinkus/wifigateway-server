@@ -15,7 +15,7 @@ EXEC_PREFIX=$$PREFIX
 BINDIR=$${EXEC_PREFIX}/bin
 DATAROOTDIR=$${PREFIX}/share
 INSTALL_ROOT=$$(DESTDIR)
-INSTALLS += target xyz
+INSTALLS += target
 
 target.path = $$BINDIR
 target.files += wifigateway-server
