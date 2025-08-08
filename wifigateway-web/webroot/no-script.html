@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>No script error.</title>
+		<link href="/css/default.css" rel="stylesheet" type="text/css" />
+		<style type= "text/css">
+			<!--
+			div { border:solid 2px #000; margin:0.2em } 
+			top-panel, bottom-panel { height: 50px }
+			main-panel {height: 800px }
+			-->
+		</style>
+	</head>
+		<body style="text-align:center; margin-top:3em; color:red;">
+		<div>
+			<h1 class="error-big-page">Error: Javascript Required.</h1>
+			<p>
+				The page you requested requires javascript. Your browser does not support it or it is not currently enabled.<br />
+				<?php
+					$referer = $_GET['referer'];
+					if( $referer )
+					{
+						print "Please try enabling it then clicking <a href=\"$referer\">here</a> to revisit the page.";
+					}
+					else
+					{
+						print "Please try enabling it then revisiting the page.";
+					}
+				?>
+			</p>
+		</div>
+	</body>
+</html>

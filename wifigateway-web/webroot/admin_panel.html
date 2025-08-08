@@ -1,0 +1,134 @@
+<?php
+session_start();
+/*if(empty($_SERVER['PHP_AUTH_USER']))
+{
+  header("Location: login.html?return=".$_SERVER['PHP_SELF']);
+  exit();
+}*/
+?>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title></title>
+    <link href="/css/default.css" rel="stylesheet" type="text/css" />
+    <style type= "text/css">
+      html,body {border:0; margin:0; height:100%;}
+      table td {border:solid 1px #BBB;}
+      .gw_frame {width:1000px; min-height:400px; border: solid 1px #888; margin:50px auto; padding:0.5em;}
+    </style>
+    <noscript>
+      <meta http-equiv="Refresh" content="0;URL=no-script.html" />
+    </noscript>
+    <script type="text/javascript" src="/js/jquery.js"></script>
+    <script type="text/javascript" src="/js/gateway.js"></script>
+    <script type="text/javascript">
+    <!--
+  
+    jQuery(document).ready(function()
+    {
+      console.log("Panel init");
+      jQuery("#ajax_strobe").css("visibility", "hidden");
+      jQuery("#ajax_strobe").ajaxStart(function(){this.css("visibility"|"visible");});
+      jQuery("#ajax_strobe").ajaxStop(function(){this.css("visibility", "hidden");});
+      jQuery(document).bind("get_ips_cb", get_ips_cb);
+      jQuery(document).bind("get_session_stats_cb", get_session_stats_cb);
+      jQuery(document).bind("end_session_cb", end_session_cb);
+      gw_call("get_ips");
+      setInterval(ips_update, 5000);
+    });
+    
+    function ips_update()
+    {
+      jQuery("#session_list tbody").children().remove();
+      gw_call("get_ips");
+    }
+    
+    function get_ips_cb(e, result)
+    {
+      console.log("get_ips_cb", result);
+      
+      if(result.result)
+      {
+        result  = result.result;
+        var ips = result.ips;
+        for(var i = 0; i < ips.length; i++)
+        {
+          gw_call("get_session_stats", {ip:ips[i]});
+        }
+      }
+    }
+    
+    function end_session_cb()
+    {
+      ips_update();
+    }
+
+    /**
+     * {status:"ok", stats:{IP:"12.12.12.28", MAC:"", state:3, bandwidth:1000, timeRemaining:0, quotaRemaining:500, activityTimeRemaining:60, updateTimeRemaining:0, pauseTimeRemaining:30, endTimeRemaining:5, sessionTime:30}, ip:"12.12.12.28"}
+     */
+    function get_session_stats_cb(e, result)
+    { 
+      console.log("stats_cb ");
+      
+      if(result.error)
+      {
+        console.log("Error", result.error);
+        return
+      }  
+      result = result.result;;
+      var str;
+      var IP = result.stats.IP;
+      var MAC = result.stats.MAC;        
+      var state = state_code_to_string(parseInt(result.stats.state));
+      var sessionTime = parseInt(result.stats.sessionTime);
+      var timeRemaining = parseInt(result.stats.timeRemaining);
+      var quotaRemaining = parseInt(result.stats.quotaRemaining);
+      var bandwidth = parseInt(result.stats.bandwidth);
+      str = "<tr>";
+      str += "<td>" + IP + "</td>";
+      str += "<td>" + MAC + "</td>";
+      str += "<td>" + state + "</td>";
+      str += "<td>" + sessionTime + "</td>";
+      str += "<td>" + timeRemaining + "</td>";
+      str += "<td>" + quotaRemaining + "</td>";
+      str += "<td>" + bandwidth + "</td>";
+      str += "<td>";
+      if(state != "ended")
+      {
+        str += "<input type='button' value='end' class='end_button'/>";
+      }
+      else
+      {
+        str += "<input type='button' value='del' class='delete_button'/>";
+      }
+      str += "</td>";
+      var item = jQuery(str);
+      
+      item.find(".end_button").off("click").click(function(){gw_call("end_session", {ip:IP});});
+      jQuery("#session_list tbody").append(item);
+    }        
+      
+    //-->
+    </script>
+  </head>
+  <body>
+    <div class="gw_frame">
+      <h1>Admin Panel</h1>
+        <div>
+          <table id="session_list">
+            <thead>
+            <tr><td>IP</td><td>MAC</td><td>STATE</td><td>SESSION TIME</td><td>TIME REM</td><td>QUOTA REM</td><td>BW</td><td>ACTIONS</td></tr>
+            </thead>
+            <tbody>
+            </tbody>
+          </table>
+        </div>
+        <div>
+          <ul id="message_list"><!-- msg here --></ul>
+          </div>
+            <img id="ajax_strobe" src="img/loading.gif" />
+          </div>
+        </div>
+    </div>
+  </body>
+</html>

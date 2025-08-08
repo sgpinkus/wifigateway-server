@@ -1,1 +1,13 @@
+wifigateway-server
+wifigateway-server.pro.user
+gateway.pro.user
+conf/init.d/wifigatewaysrv
+Makefile
+Makefile.gateway
 docs/
+*.moc/
+*.obj/
+*.a
+test
+config.log
+config.status

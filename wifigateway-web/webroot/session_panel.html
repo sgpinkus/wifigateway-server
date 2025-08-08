@@ -1,0 +1,57 @@
+<?php
+/**
+ * Javascript on this page starts a session, then is responsible for controlling it.
+ */
+ini_set('include_path', dirname(dirname(__FILE__)) . "/:" . ini_get('include_path'));
+require_once 'gw_logging.php';
+
+if(empty($_POST['accepted']))
+{
+  error_log("Not accepted");
+  header("Location: /");
+}
+?>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title></title>
+    <link href="/css/default.css" rel="stylesheet" type="text/css" />
+    <style type= "text/css">
+      html,body {border:0; margin:0; height:100% }
+      .gw_frame {width:500px; min-height:400px; border: solid 1px #888; margin:50px auto; padding:0.5em; position:relative;}
+      .buttons button {min-width:200px; padding:0.5em; margin:0.5em;}
+      .buttons {text-align:center;}
+      #ajax_strobe {position:absolute; bottom:0; right:0;}
+      #message_list {position:absolute; bottom:0;}
+    </style>
+    <noscript>
+      <meta http-equiv="Refresh" content="0;URL=no-script.html" />
+    </noscript>
+    <script type="text/javascript" src="/js/jquery.js"></script>
+    <script type="text/javascript" src="/js/gateway.js"></script>
+    <script type="text/javascript" src="/js/sessionpanel.js"></script>
+  </head>
+  <body>
+    <div class="gw_frame">
+      <h1>Session Monitor Panel</h1>
+      <div>
+        <em>Status: </em><span id="status_text">Uninitialized</span>
+      </div>
+      <div class="buttons">
+        <button id="pause_button"><span>Pause Session</span></button><br />
+        <button id="end_button"><span>End Session</span></button>
+      </div>
+      <ul id="stats">
+        <li>Session Time:<span id="time_stat"><span id="time_used">0</span>/<span id="time">0</span>s</li>
+        <li>Quota:<span id="quota_used">0</span>/<span id="quota">0</span>MB</li>
+        <li>Bandwidth:<span id="bandwidth">0</span>KB/s</li>
+        <li id="pause_time_stat">Pause Time Left:<span id="pause_time_left">0</span>s</li>
+      </ul>
+      <div>
+        <ul id="message_list"><!-- msg here --></ul>              
+      </div>
+        <img id="ajax_strobe" src="img/loading.gif"></img>
+      </div>
+    </div>
+  </body>
+</html>

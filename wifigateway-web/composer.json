@@ -1,0 +1,17 @@
+{
+  "name": "sam-at-github/wifigateway-web",
+  "description": "Simple front end to Wifi Gateway",
+  "homepage": "http://nowhere.com/",
+  "license": "GPL-3.0",
+  "repositories": [
+    {
+      "type": "vcs",
+      "url": "https://github.com/jquery/jquery"
+    }
+  ],
+  "config": {
+      "vendor-dir": "webroot/js/"
+  }
+}
+
+
